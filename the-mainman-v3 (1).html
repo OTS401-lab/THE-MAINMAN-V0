@@ -1,0 +1,2172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0">
+<title>THE MAINMAN — Online Shopping BD & KSA</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{height:100%}
+body{font-family:'Noto Sans',sans-serif;background:#EAEDED;color:#0F1111;font-size:14px;overflow-x:hidden}
+button{cursor:pointer;font-family:inherit}
+a{text-decoration:none;color:inherit;cursor:pointer}
+input,select,textarea{font-family:inherit}
+.hide{display:none!important}
+img{max-width:100%}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-thumb{background:#aaa;border-radius:3px}
+
+/* ── HEADER ── */
+#HDR{position:sticky;top:0;z-index:800;box-shadow:0 2px 10px rgba(0,0,0,.4)}
+.hTop{background:#131921;display:flex;align-items:center;padding:8px 12px;gap:8px;min-height:60px}
+.hLogo{border:1px solid transparent;border-radius:2px;padding:4px 8px;cursor:pointer;flex-shrink:0}
+.hLogo:hover{border-color:#fff}
+.hLogoTxt{font-size:19px;font-weight:900;color:#fff;line-height:1.1}
+.hLogoTxt span{color:#FF9900}
+.hLogoSub{font-size:9px;color:#aaa;letter-spacing:1px;margin-top:1px}
+.hLoc{display:flex;flex-direction:column;border:1px solid transparent;border-radius:2px;padding:4px 7px;cursor:pointer;color:#fff;flex-shrink:0}
+.hLoc:hover{border-color:#fff}
+.hLoc .l1{font-size:10px;color:#ccc}
+.hLoc .l2{font-size:12px;font-weight:700}
+.hSearch{flex:1;display:flex;max-width:820px}
+.hSearch select{background:#ddd;border:none;border-radius:4px 0 0 4px;padding:0 5px;font-size:11px;height:40px;cursor:pointer;outline:none;border-right:1px solid #ccc;min-width:40px}
+.hSearch input{flex:1;height:40px;border:none;padding:0 10px;font-size:14px;outline:none}
+.hSearch button{background:#FF9900;border:none;border-radius:0 4px 4px 0;width:44px;height:40px;font-size:20px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.hSearch button:hover{background:#e68900}
+.hAcc{display:flex;flex-direction:column;border:1px solid transparent;border-radius:2px;padding:4px 7px;cursor:pointer;color:#fff;white-space:nowrap;flex-shrink:0}
+.hAcc:hover{border-color:#fff}
+.hAcc .a1{font-size:10px;color:#ccc}
+.hAcc .a2{font-size:12px;font-weight:700}
+.hCartBtn{display:flex;align-items:center;gap:3px;border:1px solid transparent;border-radius:2px;padding:4px 7px;cursor:pointer;color:#fff;position:relative;flex-shrink:0}
+.hCartBtn:hover{border-color:#fff}
+.cartBadge{position:absolute;top:1px;left:19px;background:#FF9900;color:#111;font-size:11px;font-weight:800;min-width:18px;height:18px;border-radius:9px;display:flex;align-items:center;justify-content:center;padding:0 2px}
+.hNav{background:#232F3E;display:flex;align-items:center;padding:0 8px;overflow-x:auto;white-space:nowrap}
+.hNav::-webkit-scrollbar{height:0}
+.hNav a{display:inline-flex;align-items:center;padding:8px 9px;color:#fff;font-size:13px;font-weight:500;border:1px solid transparent;border-radius:2px;user-select:none}
+.hNav a:hover,.hNav a.act{border-color:#fff}
+.hNav a.gold{color:#FF9900;font-weight:700}
+.hPromo{background:#37475A;display:flex;align-items:center;justify-content:space-between;padding:5px 14px;flex-wrap:wrap;gap:5px}
+.hPromo .pLoc{color:#fff;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:4px}
+.hPromo .pLoc:hover{text-decoration:underline}
+.primBtn{background:#00A8E0;color:#fff;border:none;border-radius:20px;padding:4px 12px;font-size:12px;font-weight:700;cursor:pointer}
+
+/* ── PAGES ── */
+.page{display:none;min-height:80vh}
+.page.show{display:block}
+.mw{max-width:1500px;margin:0 auto;padding:0 12px}
+
+/* ── BANNER ── */
+.banWrap{position:relative;overflow:hidden;background:#131921}
+.banTrack{display:flex;transition:transform .5s ease}
+.banSlide{min-width:100%;height:270px;display:flex;align-items:center;padding:32px 50px;position:relative;overflow:hidden;flex-shrink:0}
+.bs1{background:linear-gradient(120deg,#0d1b2a,#1b3a5c)}
+.bs2{background:linear-gradient(120deg,#1a0533,#6a1b9a)}
+.bs3{background:linear-gradient(120deg,#1a2e00,#4a8000)}
+.bs4{background:linear-gradient(120deg,#3d0000,#b71c1c)}
+.bs5{background:linear-gradient(120deg,#00224a,#00599b)}
+.bCnt{position:relative;z-index:2;max-width:500px}
+.bTag{display:inline-block;background:#FF9900;color:#111;font-size:11px;font-weight:800;padding:3px 10px;border-radius:2px;margin-bottom:10px}
+.bH{font-size:clamp(22px,3.5vw,40px);font-weight:900;color:#fff;line-height:1.15;margin-bottom:8px}
+.bH em{color:#FF9900;font-style:normal}
+.bP{font-size:14px;color:rgba(255,255,255,.75);margin-bottom:16px;line-height:1.5}
+.bBtn{background:#FF9900;color:#111;font-size:14px;font-weight:700;border:none;border-radius:3px;padding:9px 22px;cursor:pointer}
+.bBtn:hover{background:#e68900}
+.bDeco{position:absolute;right:60px;top:50%;transform:translateY(-50%);font-size:110px;opacity:.12;pointer-events:none}
+.bArr{position:absolute;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.12);border:none;color:#fff;font-size:22px;width:36px;height:60px;border-radius:3px;cursor:pointer;z-index:3}
+.bArr:hover{background:rgba(255,255,255,.28)}
+.bDots{position:absolute;bottom:10px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:3}
+.bDot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);cursor:pointer;transition:all .2s;border:none}
+.bDot.on{background:#FF9900;width:18px;border-radius:4px}
+
+/* ── CATEGORY ROW ── */
+.catRow{background:#fff;padding:12px 14px;margin-bottom:10px}
+.catScroll{display:flex;gap:6px;overflow-x:auto;max-width:1500px;margin:0 auto}
+.catScroll::-webkit-scrollbar{height:0}
+.catItem{display:flex;flex-direction:column;align-items:center;gap:5px;min-width:76px;padding:6px 7px;border-radius:6px;cursor:pointer;transition:background .15s;text-align:center;user-select:none}
+.catItem:hover{background:#f3f3f3}
+.catIco{width:58px;height:58px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:26px}
+.catLbl{font-size:11px;font-weight:600;color:#0F1111;line-height:1.2}
+
+/* ── SECTION ── */
+.secCard{background:#fff;border-radius:4px;padding:16px;margin-bottom:10px}
+.secHd{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.secTitle{font-size:19px;font-weight:700}
+.secSee{font-size:13px;color:#007185;border:1px solid #007185;border-radius:20px;padding:4px 13px;background:none;cursor:pointer;white-space:nowrap}
+.secSee:hover{background:#007185;color:#fff}
+
+/* ── QUICK BOXES ── */
+.qBoxes{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-bottom:10px}
+.qBox{background:#fff;border-radius:4px;padding:14px;cursor:pointer}
+.qBox:hover .qSee{text-decoration:underline}
+.qBoxTitle{font-size:16px;font-weight:700;margin-bottom:10px}
+.qGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.qItem{display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}
+.qImg{width:100%;aspect-ratio:1;background:#f3f3f3;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:26px;transition:transform .2s}
+.qItem:hover .qImg{transform:scale(1.06)}
+.qNm{font-size:11px;color:#555;text-align:center}
+.qSee{font-size:13px;color:#007185}
+
+/* ── PRODUCT GRID ── */
+.pGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:10px}
+.pCard{background:#fff;border:1px solid #ddd;border-radius:4px;overflow:hidden;display:flex;flex-direction:column;transition:box-shadow .2s;position:relative}
+.pCard:hover{box-shadow:0 3px 14px rgba(0,0,0,.18)}
+.pImg{height:175px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;position:relative;cursor:pointer}
+.pEmoji{font-size:68px;transition:transform .3s;pointer-events:none}
+.pCard:hover .pEmoji{transform:scale(1.08)}
+.pBdg{position:absolute;top:0;left:0;font-size:10px;font-weight:800;padding:3px 7px;color:#fff;pointer-events:none}
+.bHot{background:#CC0C39}.bNew{background:#007600}.bDeal{background:#FF6600}.bTrend{background:#6200EA}
+.pWish{position:absolute;top:6px;right:6px;background:rgba(255,255,255,.92);border:1px solid #ddd;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .2s;z-index:2}
+.pWish:hover{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.2)}
+.pBody{padding:9px;flex:1;display:flex;flex-direction:column;cursor:pointer}
+.pSeller{font-size:11px;color:#007185;margin-bottom:3px}
+.pName{font-size:13px;color:#0F1111;line-height:1.3;margin-bottom:5px;flex:1;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pStars{color:#FF9900;font-size:12px}
+.pRc{font-size:11px;color:#007185;margin-left:3px}
+.pPrice{font-size:17px;font-weight:700;margin-top:4px}
+.pOld{font-size:11px;color:#565959;text-decoration:line-through;margin-left:4px}
+.pDisc{font-size:11px;color:#CC0C39;font-weight:700;margin-left:3px}
+.pDel{font-size:11px;color:#007600;margin-top:2px}
+.pBtns{padding:0 9px 9px;display:flex;flex-direction:column;gap:5px}
+.btnAC{background:linear-gradient(to bottom,#FFD814,#FF9900);border:1px solid #FFA500;border-radius:20px;padding:6px;font-size:12px;font-weight:700;color:#111;width:100%}
+.btnAC:hover{filter:brightness(.93)}
+.btnBN{background:#fff;border:1px solid #FF9900;border-radius:20px;padding:5px;font-size:12px;color:#111;width:100%}
+.btnBN:hover{background:#FFF3CD}
+.btnWL{background:#fff;border:1px solid #a6a6a6;border-radius:20px;padding:5px;font-size:11px;color:#555;width:100%}
+.btnWL:hover{background:#f3f3f3}
+
+/* ── DEALS ── */
+.dGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(135px,1fr));gap:8px}
+.dCard{background:#fff;border:1px solid #ddd;border-radius:4px;overflow:hidden;cursor:pointer;transition:box-shadow .2s}
+.dCard:hover{box-shadow:0 2px 8px rgba(0,0,0,.15)}
+.dImg{height:125px;background:#f8f8f8;display:flex;align-items:center;justify-content:center;font-size:48px}
+.dInfo{padding:7px}
+.dOff{color:#CC0C39;font-weight:800;font-size:12px}
+.dNm{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:2px}
+.dPr{font-size:14px;font-weight:700;margin-top:2px}
+
+/* ── RANKS ── */
+.rkRow{display:flex;gap:10px;overflow-x:auto;padding-bottom:5px}
+.rkRow::-webkit-scrollbar{height:4px}
+.rk{flex-shrink:0;min-width:124px;border-radius:8px;padding:13px;text-align:center;border:2px solid transparent}
+.rk-bz{background:#FDF3E7;border-color:#cd7f32}
+.rk-sv{background:#F5F5F5;border-color:#999}
+.rk-gd{background:#FFFDE7;border-color:#FFD700}
+.rk-pl{background:#F0F0F0;border-color:#aaa}
+.rk-dm{background:#E8F4FD;border-color:#2196F3}
+.rk-ul{background:#FFF0F5;border-color:#FF69B4}
+.rk-al{background:#FFF5F0;border-color:#FF4500}
+.rkIco{font-size:30px;margin-bottom:5px}
+.rkNm{font-size:13px;font-weight:700;margin-bottom:2px}
+.rkPts{font-size:11px;color:#565959}
+.rkBen{font-size:10px;color:#007185;margin-top:3px}
+
+/* ── SHOP PAGE ── */
+.shopWrap{display:grid;grid-template-columns:205px 1fr;gap:12px;padding:12px 0}
+.sidebar{background:#fff;border-radius:4px;padding:14px;height:fit-content;position:sticky;top:82px}
+.sbT{font-size:15px;font-weight:700;margin-bottom:10px;padding-bottom:7px;border-bottom:1px solid #e8e8e8}
+.sbG{margin-bottom:13px}
+.sbGT{font-size:13px;font-weight:700;margin-bottom:6px}
+.sbR{display:flex;align-items:center;gap:5px;margin-bottom:5px;cursor:pointer;font-size:13px}
+.sbR input{accent-color:#FF9900;width:13px;height:13px}
+.prRow{display:flex;gap:5px;align-items:center}
+.prInp{width:70px;border:1px solid #a6a6a6;border-radius:3px;padding:5px 6px;font-size:13px;outline:none}
+.prInp:focus{border-color:#FF9900}
+.applyBtn{width:100%;background:#FF9900;border:1px solid #e68900;border-radius:3px;padding:6px;font-size:13px;font-weight:600;margin-top:5px;cursor:pointer}
+.shopTopBar{background:#fff;border:1px solid #ddd;border-radius:4px;padding:8px 12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:7px;margin-bottom:10px}
+.resCount{font-size:13px;color:#565959}
+.shopCtrl{border:1px solid #a6a6a6;border-radius:3px;padding:5px 8px;font-size:13px;outline:none}
+.shopCtrl:focus{border-color:#FF9900}
+
+/* ── WISHLIST PAGE ── */
+.wlPage{max-width:1200px;margin:0 auto;padding:14px 12px}
+.pgTitleBar{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.pgBigTitle{font-size:22px;font-weight:700}
+
+/* ── CART PAGE ── */
+.cartPg{max-width:1050px;margin:0 auto;padding:14px 12px;display:grid;grid-template-columns:1.5fr 1fr;gap:14px}
+.cartBox{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:16px}
+.cartBoxTitle{font-size:20px;font-weight:700;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #FF9900}
+.cartItem{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid #e8e8e8}
+.ciImg{width:85px;height:85px;background:#f8f8f8;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:40px;flex-shrink:0}
+.ciInfo{flex:1}
+.ciName{font-size:14px;font-weight:600;margin-bottom:3px}
+.ciSeller{font-size:12px;color:#007185;margin-bottom:4px}
+.ciPrice{font-size:18px;font-weight:700;color:#0F1111;margin-bottom:7px}
+.ciActs{display:flex;align-items:center;gap:0;flex-wrap:wrap}
+.qtyCtrl{display:flex;align-items:center;gap:5px;border:1px solid #a6a6a6;border-radius:20px;padding:3px 10px;margin-right:10px}
+.qtyB{background:none;border:none;font-size:16px;cursor:pointer;color:#555;width:20px;height:20px;display:flex;align-items:center;justify-content:center;font-weight:700}
+.qtyB:hover{color:#0F1111}
+.qtyV{font-size:13px;font-weight:700;min-width:16px;text-align:center}
+.actLink{font-size:12px;color:#007185;cursor:pointer;padding:0 8px;border-left:1px solid #e8e8e8}
+.actLink:first-of-type{border-left:none;padding-left:0}
+.actLink:hover{text-decoration:underline;color:#CC0C39}
+.sumBox{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:16px;position:sticky;top:82px;height:fit-content}
+.sumLine{display:flex;justify-content:space-between;font-size:13px;color:#565959;margin-bottom:7px}
+.sumTotal{display:flex;justify-content:space-between;font-size:17px;font-weight:700;border-top:1px solid #e8e8e8;padding-top:10px;margin-top:5px}
+.sumTotal span:last-child{color:#CC0C39}
+
+/* ── ORDER PAGE ── */
+.ordPg{max-width:1020px;margin:0 auto;padding:14px 12px;display:grid;grid-template-columns:1.55fr 1fr;gap:14px}
+.ordSec{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:16px;margin-bottom:10px}
+.ordSecH{font-size:16px;font-weight:700;margin-bottom:13px;padding-bottom:7px;border-bottom:1px solid #e8e8e8;display:flex;align-items:center;gap:8px}
+.stepNum{background:#FF9900;color:#111;width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;flex-shrink:0}
+.ordSumBox{background:#fff;border:1px solid #e8e8e8;border-radius:4px;padding:16px;position:sticky;top:82px;height:fit-content}
+.ordLine{display:flex;justify-content:space-between;font-size:13px;color:#565959;margin-bottom:7px}
+.ordTotal{display:flex;justify-content:space-between;font-size:17px;font-weight:700;border-top:1px solid #e8e8e8;padding-top:10px;margin-top:5px}
+.ordTotal span:last-child{color:#CC0C39}
+.placeBtn{width:100%;background:linear-gradient(to bottom,#FFD814,#FF9900);border:1px solid #FFA500;border-radius:3px;padding:11px;font-size:15px;font-weight:700;color:#111;cursor:pointer;margin-top:12px}
+.placeBtn:hover{filter:brightness(.93)}
+
+/* Payment methods */
+.pmOpts{display:flex;flex-direction:column;gap:7px}
+.pmOpt{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid #e8e8e8;border-radius:4px;cursor:pointer;transition:all .15s}
+.pmOpt:hover{border-color:#FF9900;background:#FFFBF2}
+.pmOpt.sel{border:2px solid #FF9900;background:#FFF8E7}
+.pmIco{font-size:26px;flex-shrink:0}
+.pmNm{font-size:13px;font-weight:700}
+.pmDesc{font-size:11px;color:#565959}
+.pmRadio{width:17px;height:17px;border-radius:50%;border:2px solid #a6a6a6;margin-left:auto;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.pmRadio.on{border-color:#FF9900}
+.pmDot{width:9px;height:9px;border-radius:50%;background:#FF9900}
+
+/* Payment detail forms */
+.payForm{margin-top:10px;padding:13px;background:#f8f8f8;border-radius:4px;border:1px solid #e8e8e8}
+.payFormTitle{font-size:13px;font-weight:700;color:#232F3E;margin-bottom:9px;padding-bottom:6px;border-bottom:1px solid #ddd}
+.payInstrBox{border-radius:6px;padding:12px;margin-bottom:11px;font-size:13px;line-height:1.8;color:#fff}
+
+/* Map */
+#mapEl{height:260px;border-radius:4px;border:1px solid #e8e8e8;margin-top:10px}
+.mapSBar{display:flex;gap:6px;margin-bottom:8px}
+.mapSBar input{flex:1;border:1px solid #a6a6a6;border-radius:3px;padding:7px 9px;font-size:13px;outline:none}
+.mapSBar input:focus{border-color:#FF9900}
+.mapSBar button{background:#FF9900;border:none;border-radius:3px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.mapLocBtn{background:#232F3E;color:#fff}
+.locConf{display:flex;align-items:center;gap:6px;background:#E8F8F0;border:1px solid #34A853;border-radius:4px;padding:7px 11px;font-size:13px;color:#1E8449;margin-top:7px}
+
+/* ── ORDER CONFIRM ── */
+.ocPage{max-width:620px;margin:28px auto;padding:0 12px}
+.ocBox{background:#fff;border-radius:6px;padding:28px;text-align:center;border:1px solid #e8e8e8}
+.ocIcon{font-size:60px;margin-bottom:10px}
+.ocTitle{font-size:22px;font-weight:700;color:#1E8449;margin-bottom:5px}
+.ocId{font-size:14px;color:#565959;margin-bottom:14px}
+.ocTrack{background:#f8f8f8;border-radius:4px;padding:13px;text-align:left;margin-bottom:14px}
+.ocTrackTitle{font-size:13px;font-weight:700;margin-bottom:8px}
+.tStep{display:flex;align-items:center;gap:9px;margin-bottom:7px;font-size:13px}
+.tDot{width:10px;height:10px;border-radius:50%;background:#e8e8e8;flex-shrink:0}
+.tDot.done{background:#34A853}
+.tDot.cur{background:#FF9900}
+.ocPayInfo{background:#f8f8f8;border-radius:4px;padding:12px;text-align:left;font-size:13px;line-height:1.7;margin-bottom:14px}
+
+/* ── PROFILE PAGE ── */
+.profPg{max-width:1150px;margin:0 auto;padding:12px}
+.profBanner{background:linear-gradient(120deg,#232F3E,#37475A);color:#fff;border-radius:6px;padding:20px;margin-bottom:10px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.profAva{width:62px;height:62px;border-radius:50%;background:#FF9900;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#111;flex-shrink:0}
+.profName{font-size:20px;font-weight:700}
+.profEmail{font-size:13px;color:#ccc;margin-top:2px}
+.profBdgs{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.pbdg{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px}
+.pbOrange{background:#FF9900;color:#111}
+.pbRed{background:#CC0C39;color:#fff}
+.pbAdmin{background:#4A148C;color:#fff}
+.pTabs{display:flex;background:#fff;border-radius:4px;overflow:hidden;border:1px solid #e8e8e8;margin-bottom:10px;overflow-x:auto}
+.pTab{padding:10px 15px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:#555;border-bottom:3px solid transparent;white-space:nowrap;transition:all .15s}
+.pTab:hover{background:#f3f3f3}
+.pTab.on{border-bottom-color:#FF9900;color:#0F1111;background:#FFFBF2}
+.pPanel{display:none;background:#fff;border-radius:4px;padding:16px;border:1px solid #e8e8e8}
+.pPanel.on{display:block}
+
+/* Seller dashboard */
+.sStats{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:9px;margin-bottom:11px}
+.sStat{background:#f8f8f8;border:1px solid #e8e8e8;border-radius:4px;padding:12px;text-align:center}
+.sStat .sv{font-size:20px;font-weight:700;color:#CC0C39}
+.sStat .sl{font-size:11px;color:#565959;margin-top:2px}
+.progBox{background:#FFF8E7;border:1px solid #FFD814;border-radius:4px;padding:11px;margin-bottom:10px}
+.progLbs{display:flex;justify-content:space-between;font-size:12px;color:#555;margin-bottom:4px}
+.progTr{height:8px;background:#e8e8e8;border-radius:100px;overflow:hidden}
+.progFl{height:100%;background:linear-gradient(90deg,#FF9900,#FFD814);border-radius:100px;transition:width .5s}
+.earnBox{background:#F0FFF4;border:1px solid #34A853;border-radius:4px;padding:12px;margin-bottom:10px}
+.earnVal{font-size:22px;font-weight:700;color:#1E8449}
+.earnSAR{font-size:13px;color:#555;margin-top:2px}
+.earnNote{font-size:12px;color:#565959;line-height:1.5;margin-top:4px}
+.wBtn{background:#1E8449;color:#fff;border:none;border-radius:3px;padding:6px 14px;font-size:13px;font-weight:700;cursor:pointer;margin-top:6px}
+.wBtn:hover{background:#145A32}
+.miniProds{display:grid;grid-template-columns:repeat(auto-fill,minmax(138px,1fr));gap:8px;margin-top:10px}
+.miniP{border:1px solid #e8e8e8;border-radius:4px;padding:9px;text-align:center}
+.miniP-e{font-size:27px;margin-bottom:5px}
+.miniP-n{font-size:12px;font-weight:500;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.miniP-p{font-size:13px;font-weight:700;color:#CC0C39}
+.miniP-s{font-size:11px;color:#565959}
+.miniP-acts{display:flex;gap:4px;margin-top:5px;justify-content:center}
+.miniP-acts button{font-size:11px;padding:2px 7px;border:1px solid #ddd;border-radius:3px;background:none;cursor:pointer}
+.miniP-acts button:hover{background:#f3f3f3}
+
+/* ── ADMIN PANEL ── */
+.adminPg{max-width:1200px;margin:0 auto;padding:14px 12px}
+.adminBanner{background:linear-gradient(120deg,#4A148C,#7B1FA2);color:#fff;border-radius:6px;padding:18px;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px}
+.adminTitle{font-size:22px;font-weight:700}
+.adminSub{font-size:13px;color:rgba(255,255,255,.75);margin-top:3px}
+.adminStats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-bottom:14px}
+.aStat{background:#fff;border-radius:4px;padding:14px;text-align:center;border:1px solid #e8e8e8}
+.aStat .av{font-size:24px;font-weight:700;color:#4A148C}
+.aStat .al{font-size:12px;color:#565959;margin-top:2px}
+.adminTabs{display:flex;background:#fff;border-radius:4px;overflow:hidden;border:1px solid #e8e8e8;margin-bottom:12px;overflow-x:auto}
+.adminTab{padding:10px 16px;font-size:13px;font-weight:600;cursor:pointer;border:none;background:none;color:#555;border-bottom:3px solid transparent;white-space:nowrap}
+.adminTab:hover{background:#f3f3f3}
+.adminTab.on{border-bottom-color:#4A148C;color:#4A148C;background:#F3E5F5}
+.adminPanel{display:none;background:#fff;border-radius:4px;padding:16px;border:1px solid #e8e8e8}
+.adminPanel.on{display:block}
+.adminProdTable{width:100%;border-collapse:collapse;font-size:13px}
+.adminProdTable th{background:#f3f3f3;padding:9px 10px;text-align:left;font-weight:700;border-bottom:2px solid #e8e8e8}
+.adminProdTable td{padding:8px 10px;border-bottom:1px solid #e8e8e8;vertical-align:middle}
+.adminProdTable tr:hover td{background:#f9f9f9}
+.tblActions{display:flex;gap:5px}
+.tblActions button{font-size:11px;padding:4px 9px;border:1px solid #ddd;border-radius:3px;cursor:pointer;background:#fff}
+.tblActions .editBtn{border-color:#FF9900;color:#CC6600}
+.tblActions .editBtn:hover{background:#FFF3CD}
+.tblActions .delBtn{border-color:#CC0C39;color:#CC0C39}
+.tblActions .delBtn:hover{background:#FDEDEC}
+.adminUserTable{width:100%;border-collapse:collapse;font-size:13px}
+.adminUserTable th{background:#f3f3f3;padding:9px 10px;text-align:left;font-weight:700;border-bottom:2px solid #e8e8e8}
+.adminUserTable td{padding:8px 10px;border-bottom:1px solid #e8e8e8}
+.adminUserTable tr:hover td{background:#f9f9f9}
+.adminOrderTable{width:100%;border-collapse:collapse;font-size:13px}
+.adminOrderTable th{background:#f3f3f3;padding:9px 10px;text-align:left;font-weight:700;border-bottom:2px solid #e8e8e8}
+.adminOrderTable td{padding:8px 10px;border-bottom:1px solid #e8e8e8}
+.statusBdg{font-size:11px;font-weight:700;padding:3px 9px;border-radius:12px;white-space:nowrap}
+.st-confirmed{background:#E8F8F0;color:#1E8449;border:1px solid #34A853}
+.st-pending{background:#FEF9E7;color:#856000;border:1px solid #FFD814}
+.st-shipped{background:#E8F4FD;color:#1A5276;border:1px solid #3498DB}
+.st-cancelled{background:#FDEDEC;color:#CC0C39;border:1px solid #CC0C39}
+.ghLink{display:flex;align-items:center;gap:8px;background:#f3f3f3;border:1px solid #e8e8e8;border-radius:4px;padding:12px;font-size:13px;margin-bottom:10px;text-decoration:none;color:#0F1111;cursor:pointer}
+.ghLink:hover{background:#e8e8e8}
+
+/* ── FORMS ── */
+.fg{margin-bottom:11px}
+.fl{font-size:13px;font-weight:600;margin-bottom:4px;display:block}
+.fi,.fs,.ft{width:100%;border:1px solid #a6a6a6;border-radius:3px;padding:8px 9px;font-size:14px;outline:none;transition:border-color .2s;background:#fff}
+.fi:focus,.fs:focus,.ft:focus{border-color:#FF9900;box-shadow:0 0 0 2px rgba(255,153,0,.15)}
+.fi.err{border-color:#CC0C39}
+.fi.ok{border-color:#34A853}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.phHint{font-size:11px;margin-top:3px}
+.phHint.ok{color:#34A853}
+.phHint.err{color:#CC0C39}
+.phHint.info{color:#565959}
+.errTxt{font-size:11px;color:#CC0C39;margin-top:3px}
+.aBtn{width:100%;background:linear-gradient(to bottom,#FFD814,#FF9900);border:1px solid #FFA500;border-radius:3px;padding:9px;font-size:14px;font-weight:700;color:#111;cursor:pointer;margin-bottom:8px}
+.aBtn:hover{filter:brightness(.93)}
+.aBtnOut{width:100%;background:#fff;border:1px solid #a6a6a6;border-radius:3px;padding:8px;font-size:13px;font-weight:600;color:#0F1111;cursor:pointer;margin-bottom:8px}
+.aBtnOut:hover{background:#f3f3f3}
+.aBtnRed{background:#CC0C39;color:#fff;border-color:#990930}
+.aBtnRed:hover{filter:brightness(.9)}
+.aBtnPurple{background:#6A1B9A;color:#fff;border-color:#4A148C}
+.aBtnPurple:hover{filter:brightness(.9)}
+.divLn{text-align:center;font-size:12px;color:#767676;margin:9px 0;position:relative}
+.divLn::before{content:'';position:absolute;left:0;top:50%;right:0;height:1px;background:#e8e8e8}
+.divLn span{background:#fff;padding:0 8px;position:relative}
+.infoBx{background:#FEF9E7;border:1px solid #FFD814;border-radius:3px;padding:10px;margin-bottom:11px;font-size:12px;line-height:1.6}
+.cfSec{display:none}
+.cfSec.show{display:block}
+.cfHdr{font-size:12px;font-weight:700;padding:7px 10px;border-radius:3px;margin-bottom:9px}
+.cfBD{background:#E8F8F0;color:#1E8449}
+.cfSA{background:#FEF9E7;color:#8B4500}
+.cfAE{background:#E8F4FD;color:#1A5276}
+.cfOT{background:#F3F3F3;color:#333}
+
+/* ── MODALS ── */
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;display:none;align-items:flex-start;justify-content:center;padding:40px 12px 20px;overflow-y:auto}
+.ov.show{display:flex}
+.modal{background:#fff;border-radius:6px;width:100%;max-width:475px;animation:mUp .25s ease}
+.modal.wide{max-width:570px}
+.modal.xl{max-width:700px}
+.modal.admin{max-width:650px}
+@keyframes mUp{from{transform:translateY(16px);opacity:0}to{transform:translateY(0);opacity:1}}
+.mHdr{background:#232F3E;color:#fff;padding:13px 16px;border-radius:6px 6px 0 0;display:flex;justify-content:space-between;align-items:center}
+.mHdr h2{font-size:16px;font-weight:700}
+.mClose{background:none;border:none;color:#fff;font-size:20px;line-height:1;cursor:pointer}
+.mBody{padding:18px}
+.mHdrAdmin{background:linear-gradient(120deg,#4A148C,#7B1FA2)}
+.mTabs{display:flex;border:1px solid #ddd;border-radius:3px;overflow:hidden;margin-bottom:15px}
+.mTab{flex:1;padding:8px;text-align:center;font-size:13px;font-weight:700;cursor:pointer;background:#f3f3f3;color:#555;border:none}
+.mTab.on{background:#FF9900;color:#111}
+
+/* ── TOAST ── */
+#toastWrap{position:fixed;top:85px;right:12px;z-index:9999;display:flex;flex-direction:column;gap:6px;pointer-events:none}
+.tst{background:#232F3E;color:#fff;padding:10px 13px;border-radius:4px;font-size:13px;animation:tIn .3s ease;min-width:240px;display:flex;align-items:center;gap:6px;box-shadow:0 2px 12px rgba(0,0,0,.3)}
+.tst.ok{border-left:4px solid #34A853}
+.tst.err{border-left:4px solid #CC0C39}
+.tst.inf{border-left:4px solid #00A8E0}
+@keyframes tIn{from{transform:translateX(110%);opacity:0}to{transform:translateX(0);opacity:1}}
+
+/* ── FOOTER ── */
+footer{margin-top:10px}
+.ftTop{background:#37475A;color:#fff;padding:11px;text-align:center;font-size:13px;cursor:pointer}
+.ftTop:hover{background:#485769}
+.ftMid{background:#232F3E;color:#fff;padding:28px 36px;display:grid;grid-template-columns:repeat(auto-fit,minmax(148px,1fr));gap:18px}
+.ftCol h4{font-size:14px;font-weight:700;margin-bottom:10px}
+.ftCol a{display:block;font-size:13px;color:#ccc;margin-bottom:6px;cursor:pointer}
+.ftCol a:hover{color:#fff}
+.ftBot{background:#131921;color:#ccc;padding:11px;text-align:center;font-size:12px}
+.ftLogo{font-size:19px;font-weight:900;color:#fff;margin-bottom:3px}
+.ftLogo span{color:#FF9900}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+.shopWrap{grid-template-columns:1fr}
+.sidebar{display:none}
+.ordPg,.cartPg{grid-template-columns:1fr}
+.bDeco{display:none}
+.banSlide{padding:20px 18px}
+.ftMid{padding:20px 14px}
+}
+@media(max-width:600px){
+.hLoc{display:none}
+.hTop{padding:6px 10px;gap:6px}
+.pGrid{grid-template-columns:repeat(auto-fill,minmax(148px,1fr))}
+}
+</style>
+</head>
+<body>
+
+<div id="toastWrap"></div>
+
+<!-- AUTH MODAL -->
+<div class="ov" id="ovAuth">
+<div class="modal">
+<div class="mHdr"><h2 id="authTitle">Sign In</h2><button class="mClose" onclick="closeOv('ovAuth')">✕</button></div>
+<div class="mBody">
+<div class="mTabs">
+<button class="mTab on" id="tSI" onclick="authTab('si')">Sign In</button>
+<button class="mTab" id="tCA" onclick="authTab('ca')">Create Account</button>
+</div>
+<div id="fSI">
+<div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="siEm" placeholder="your@email.com"></div>
+<div class="fg"><label class="fl">Password</label><input class="fi" type="password" id="siPw" placeholder="Password" onkeyup="if(event.key==='Enter')doSignIn()"></div>
+<button class="aBtn" onclick="doSignIn()">Sign In →</button>
+<div style="text-align:center;font-size:12px;color:#007185;cursor:pointer;margin-bottom:8px" onclick="toast('Password reset link sent!','inf')">Forgot password?</div>
+<div class="divLn"><span>New customer?</span></div>
+<button class="aBtnOut" onclick="authTab('ca')">Create your account →</button>
+</div>
+<div id="fCA" class="hide">
+<div class="frow">
+<div class="fg"><label class="fl">First Name *</label><input class="fi" type="text" id="caFN" placeholder="First name"></div>
+<div class="fg"><label class="fl">Last Name *</label><input class="fi" type="text" id="caLN" placeholder="Last name"></div>
+</div>
+<div class="fg"><label class="fl">Email *</label><input class="fi" type="email" id="caEm" placeholder="email@example.com"></div>
+<div class="fg"><label class="fl">Mobile *</label>
+<input class="fi" type="tel" id="caPh" placeholder="+880 01X / +966 05X" oninput="chkPhone('caPh','caPh_h','caC0')">
+<div class="phHint info" id="caPh_h"></div></div>
+<div class="fg"><label class="fl">Country *</label>
+<select class="fs" id="caC0" onchange="chkPhone('caPh','caPh_h','caC0')">
+<option value="">— Select —</option>
+<option value="BD">🇧🇩 Bangladesh</option>
+<option value="SA">🇸🇦 Saudi Arabia</option>
+<option value="AE">🇦🇪 UAE</option>
+<option value="OT">🌍 Other</option>
+</select></div>
+<div class="fg"><label class="fl">Password *</label><input class="fi" type="password" id="caPw" placeholder="Min 6 characters"></div>
+<div class="fg"><label class="fl">Confirm Password *</label><input class="fi" type="password" id="caPw2" placeholder="Re-enter password"></div>
+<button class="aBtn" onclick="doCreateAcc()">Create Account →</button>
+<p style="font-size:11px;color:#565959;text-align:center">Seller ID is separate — register from your profile after login.</p>
+</div>
+</div>
+</div>
+</div>
+
+<!-- SELLER ID MODAL -->
+<div class="ov" id="ovSID">
+<div class="modal wide">
+<div class="mHdr"><h2>🛍️ Register Seller ID</h2><button class="mClose" onclick="closeOv('ovSID')">✕</button></div>
+<div class="mBody">
+<div class="infoBx"><strong>📌 Benefits:</strong><br>
+✅ 5 points per sale • 1 pt = ৳29 BDT (SAR auto-calculated)<br>
+✅ Withdraw above ৳500 • Seller ranks: Bronze → Alpha<br>
+✅ Personal dashboard & product management</div>
+<div class="fg"><label class="fl">Shop Name *</label><input class="fi" type="text" id="sShop" placeholder="Your store name"></div>
+<div class="frow">
+<div class="fg"><label class="fl">Category *</label>
+<select class="fs" id="sCat"><option value="">Select</option><option>Clothing & Fashion</option><option>Groceries</option><option>Electronics</option><option>Beauty</option><option>Home & Living</option><option>Sports</option><option>Books</option><option>Other</option></select></div>
+<div class="fg"><label class="fl">Country *</label>
+<select class="fs" id="sCo" onchange="sidCountry()"><option value="">Select</option><option value="BD">🇧🇩 Bangladesh</option><option value="SA">🇸🇦 Saudi Arabia</option><option value="AE">🇦🇪 UAE</option><option value="OT">🌍 Other</option></select></div>
+</div>
+<div class="cfSec" id="cfBD"><div class="cfHdr cfBD">🇧🇩 Bangladesh — Payment Details</div>
+<div class="fg"><label class="fl">NID Number *</label><input class="fi" type="text" id="bdNID" placeholder="17-digit NID"></div>
+<div class="frow">
+<div class="fg"><label class="fl">bKash/Nagad Number *</label><input class="fi" type="tel" id="bdBK" placeholder="01XXXXXXXXX"></div>
+<div class="fg"><label class="fl">City *</label><input class="fi" type="text" id="bdCity" placeholder="Dhaka, Chittagong..."></div>
+</div>
+<div class="frow">
+<div class="fg"><label class="fl">Bank Account (optional)</label><input class="fi" type="text" id="bdBank" placeholder="Account number"></div>
+<div class="fg"><label class="fl">Bank Name (optional)</label><input class="fi" type="text" id="bdBNm" placeholder="Bank name"></div>
+</div></div>
+<div class="cfSec" id="cfSA"><div class="cfHdr cfSA">🇸🇦 Saudi Arabia — Payment Details</div>
+<div class="frow">
+<div class="fg"><label class="fl">Iqama / National ID *</label><input class="fi" type="text" id="saIQ" placeholder="ID number"></div>
+<div class="fg"><label class="fl">City *</label><input class="fi" type="text" id="saCity" placeholder="Riyadh, Jeddah..."></div>
+</div>
+<div class="fg"><label class="fl">IBAN (Al Rajhi / Any Bank) *</label><input class="fi" type="text" id="saIBAN" placeholder="SA xx xxxx xxxx..."></div>
+<div class="frow">
+<div class="fg"><label class="fl">STC Pay Number (optional)</label><input class="fi" type="tel" id="saSTC" placeholder="05XXXXXXXX"></div>
+<div class="fg"><label class="fl">CR No. (optional)</label><input class="fi" type="text" id="saCR" placeholder="Commercial Reg."></div>
+</div></div>
+<div class="cfSec" id="cfAE"><div class="cfHdr cfAE">🇦🇪 UAE — Payment Details</div>
+<div class="frow">
+<div class="fg"><label class="fl">Emirates ID *</label><input class="fi" type="text" id="aeEID" placeholder="784-XXXX-XXXXXXX-X"></div>
+<div class="fg"><label class="fl">City *</label><input class="fi" type="text" id="aeCity" placeholder="Dubai, Abu Dhabi..."></div>
+</div>
+<div class="fg"><label class="fl">IBAN *</label><input class="fi" type="text" id="aeIBAN" placeholder="AE xx xxxx..."></div></div>
+<div class="cfSec" id="cfOT"><div class="cfHdr cfOT">🌍 Other Country</div>
+<div class="frow">
+<div class="fg"><label class="fl">Country *</label><input class="fi" type="text" id="otCN" placeholder="Country name"></div>
+<div class="fg"><label class="fl">City *</label><input class="fi" type="text" id="otCity" placeholder="City"></div>
+</div>
+<div class="fg"><label class="fl">ID / Passport *</label><input class="fi" type="text" id="otID" placeholder="ID or Passport"></div>
+<div class="fg"><label class="fl">Bank / IBAN *</label><input class="fi" type="text" id="otBank" placeholder="Account details"></div></div>
+<div class="fg" style="margin-top:6px"><label class="fl">About Your Shop</label><textarea class="ft" id="sAbout" rows="2" placeholder="What do you sell?"></textarea></div>
+<button class="aBtn" onclick="doRegSeller()">Register Seller ID →</button>
+</div></div></div>
+
+<!-- ADD/EDIT PRODUCT MODAL -->
+<div class="ov" id="ovAP">
+<div class="modal wide">
+<div class="mHdr"><h2 id="apTitle">➕ Add New Product</h2><button class="mClose" onclick="closeOv('ovAP')">✕</button></div>
+<div class="mBody">
+<input type="hidden" id="apEditId">
+<div class="frow">
+<div class="fg"><label class="fl">Product Name *</label><input class="fi" type="text" id="apName" placeholder="Product name"></div>
+<div class="fg"><label class="fl">Category *</label>
+<select class="fs" id="apCat"><option>Clothing</option><option>Groceries</option><option>Electronics</option><option>Beauty</option><option>Home</option><option>Sports</option><option>Books</option><option>Other</option></select></div>
+</div>
+<div class="frow">
+<div class="fg"><label class="fl">Price (৳) *</label><input class="fi" type="number" id="apPrice" placeholder="0"></div>
+<div class="fg"><label class="fl">Original Price (৳)</label><input class="fi" type="number" id="apOldP" placeholder="Optional (for discount)"></div>
+</div>
+<div class="frow">
+<div class="fg"><label class="fl">Stock Qty *</label><input class="fi" type="number" id="apStock" placeholder="100"></div>
+<div class="fg"><label class="fl">Badge</label>
+<select class="fs" id="apBadge"><option value="">None</option><option value="HOT">🔥 Hot</option><option value="NEW">✨ New</option><option value="DEAL">🏷️ Deal</option><option value="TRENDING">📈 Trending</option></select></div>
+</div>
+<div class="fg"><label class="fl">Emoji Icon *</label><input class="fi" type="text" id="apEmoji" placeholder="e.g. 👕 🥦 📱 💄 🏠 ⚽"></div>
+<div class="fg"><label class="fl">Description *</label><textarea class="ft" id="apDesc" rows="3" placeholder="Describe your product in detail..."></textarea></div>
+<button class="aBtn" id="apSubmitBtn" onclick="doAddOrEditProd()">List Product →</button>
+</div></div></div>
+
+<!-- PRODUCT DETAIL MODAL -->
+<div class="ov" id="ovPD">
+<div class="modal xl">
+<div class="mHdr"><h2 id="pdTitle">Product</h2><button class="mClose" onclick="closeOv('ovPD')">✕</button></div>
+<div class="mBody" id="pdBody"></div>
+</div></div>
+
+<!-- WITHDRAW MODAL -->
+<div class="ov" id="ovWD">
+<div class="modal">
+<div class="mHdr"><h2>💰 Withdraw Earnings</h2><button class="mClose" onclick="closeOv('ovWD')">✕</button></div>
+<div class="mBody" id="wdBody"></div>
+</div></div>
+
+<!-- HEADER -->
+<div id="HDR">
+<div class="hTop">
+<div class="hLogo" onclick="goPage('home')">
+<div class="hLogoTxt">THE<span>MAIN</span>MAN</div>
+<div class="hLogoSub">By Mainul Islam Shuvo</div>
+</div>
+<div class="hLoc">
+<span class="l1">📍 Deliver to</span>
+<span class="l2" id="hdLoc">Bangladesh</span>
+</div>
+<div class="hSearch">
+<select id="srchCat"><option>All</option><option>Clothing</option><option>Groceries</option><option>Electronics</option><option>Beauty</option><option>Home</option><option>Sports</option><option>Books</option></select>
+<input type="text" id="srchIn" placeholder="Search THE MAINMAN..." onkeyup="if(event.key==='Enter')doSearch()">
+<button onclick="doSearch()">🔍</button>
+</div>
+<div class="hAcc" onclick="onAccClick()">
+<span class="a1" id="hdHello">Hello, sign in</span>
+<span class="a2" id="hdAccLbl">Account & Lists ▾</span>
+</div>
+<div class="hCartBtn" onclick="goPage('cart')">
+<span class="cartBadge" id="cartBadge">0</span>
+<span style="font-size:26px">🛒</span>
+<span style="font-size:12px;font-weight:700">Cart</span>
+</div>
+</div>
+<nav class="hNav">
+<a onclick="goPage('home')" id="nav_home" class="act">Home</a>
+<a onclick="goCat('Clothing')">👕 Fashion</a>
+<a onclick="goCat('Groceries')">🥦 Fresh</a>
+<a onclick="goPage('deals')">🏷️ Today's Deals</a>
+<a onclick="goCat('Electronics')">📱 Electronics</a>
+<a onclick="goCat('Beauty')">💄 Beauty</a>
+<a onclick="goCat('Sports')">⚽ Sports</a>
+<a onclick="goCat('Home')">🏠 Home</a>
+<a onclick="goPage('wishlist')">❤️ Wishlist</a>
+<a onclick="openSID()" class="gold">💰 Seller ID</a>
+<a onclick="goPage('admin')" class="gold" id="adminNavLink" style="display:none">⚙️ Admin</a>
+</nav>
+<div class="hPromo">
+<div class="pLoc" onclick="cycleLoc()">📍 <span id="promoLoc">Delivering to Bangladesh — <strong>Update location</strong></span></div>
+<button class="primBtn" onclick="toast('THE MAINMAN Premium — coming soon! 🚀','inf')">Join Premium ★</button>
+</div>
+</div>
+
+<!-- HOME PAGE -->
+<div class="page show" id="page_home">
+<div class="banWrap">
+<div class="banTrack" id="banTrack">
+<div class="banSlide bs1"><div class="bCnt"><div class="bTag">🔥 WELCOME</div><div class="bH">THE<em> MAINMAN</em><br>Marketplace</div><div class="bP">Bangladesh & Saudi Arabia's Premium Online Store</div><button class="bBtn" onclick="goPage('shop')">Shop Now →</button></div><div class="bDeco">🛍️</div></div>
+<div class="banSlide bs2"><div class="bCnt"><div class="bTag">👕 NEW SEASON</div><div class="bH">Trending<em> Fashion</em></div><div class="bP">Panjabi, Saree, Jeans, Dresses & more</div><button class="bBtn" onclick="goCat('Clothing')">Shop Fashion →</button></div><div class="bDeco">👗</div></div>
+<div class="banSlide bs3"><div class="bCnt"><div class="bTag">🥦 FRESH DAILY</div><div class="bH">Farm<em> Fresh</em><br>Groceries</div><div class="bP">Rice, Fish, Vegetables, Dates & more</div><button class="bBtn" onclick="goCat('Groceries')">Shop Groceries →</button></div><div class="bDeco">🛒</div></div>
+<div class="banSlide bs4"><div class="bCnt"><div class="bTag">💰 EARN DAILY</div><div class="bH">Become<em> a Seller</em></div><div class="bP">5 pts/sale • ৳29/pt • Withdraw ৳500+</div><button class="bBtn" onclick="openSID()">Register Seller ID →</button></div><div class="bDeco">👑</div></div>
+<div class="banSlide bs5"><div class="bCnt"><div class="bTag">📱 TECH PICKS</div><div class="bH">Top<em> Electronics</em></div><div class="bP">Earbuds, Smart Watch, Power Banks & more</div><button class="bBtn" onclick="goCat('Electronics')">Shop Electronics →</button></div><div class="bDeco">📱</div></div>
+</div>
+<button class="bArr" style="left:6px" onclick="slideBan(-1)">‹</button>
+<button class="bArr" style="right:6px" onclick="slideBan(1)">›</button>
+<div class="bDots" id="bDots"></div>
+</div>
+<div class="mw">
+<div class="catRow">
+<div class="catScroll">
+<div class="catItem" onclick="goPage('deals')"><div class="catIco" style="background:#FFF3CD">🏷️</div><div class="catLbl">Today's Deals</div></div>
+<div class="catItem" onclick="goCat('Electronics')"><div class="catIco" style="background:#E8F4FD">📱</div><div class="catLbl">Mobiles</div></div>
+<div class="catItem" onclick="goCat('Groceries')"><div class="catIco" style="background:#EAFAF1">🥦</div><div class="catLbl">Daily Needs</div></div>
+<div class="catItem" onclick="goCat('Clothing')"><div class="catIco" style="background:#FDF2F8">👗</div><div class="catLbl">Fashion</div></div>
+<div class="catItem" onclick="goCat('Beauty')"><div class="catIco" style="background:#FEF9E7">💄</div><div class="catLbl">Beauty</div></div>
+<div class="catItem" onclick="goCat('Home')"><div class="catIco" style="background:#EAFAF1">🏠</div><div class="catLbl">Home</div></div>
+<div class="catItem" onclick="goCat('Sports')"><div class="catIco" style="background:#FFF3CD">⚽</div><div class="catLbl">Sports</div></div>
+<div class="catItem" onclick="goCat('Books')"><div class="catIco" style="background:#F3E5F5">📚</div><div class="catLbl">Books</div></div>
+<div class="catItem" onclick="goPage('wishlist')"><div class="catIco" style="background:#FCE4EC">❤️</div><div class="catLbl">Wishlist</div></div>
+</div></div>
+<div class="qBoxes" id="qBoxes"></div>
+<div class="secCard">
+<div class="secHd"><div class="secTitle">⭐ Featured Products</div><button class="secSee" onclick="goPage('shop')">See all →</button></div>
+<div class="pGrid" id="homeProd"></div>
+</div>
+<div class="secCard">
+<div class="secHd"><div class="secTitle">🔥 Hot Deals</div><button class="secSee" onclick="goPage('deals')">See all →</button></div>
+<div class="dGrid" id="homeDeals"></div>
+</div>
+<div class="secCard">
+<div class="secHd"><div class="secTitle">🏆 Seller Rank System</div><button class="secSee" onclick="openSID()">Become a Seller →</button></div>
+<div style="font-size:13px;color:#565959;margin-bottom:10px">5 pts per sale • 1 pt = ৳29 BDT • Min withdrawal ৳500</div>
+<div class="rkRow">
+<div class="rk rk-bz"><div class="rkIco">🥉</div><div class="rkNm" style="color:#8B4513">Bronze</div><div class="rkPts">0–99 pts</div><div class="rkBen">Free listings</div></div>
+<div class="rk rk-sv"><div class="rkIco">🥈</div><div class="rkNm" style="color:#666">Silver</div><div class="rkPts">100–299 pts</div><div class="rkBen">Priority support</div></div>
+<div class="rk rk-gd"><div class="rkIco">🥇</div><div class="rkNm" style="color:#B8860B">Gold</div><div class="rkPts">300–699 pts</div><div class="rkBen">Featured listings</div></div>
+<div class="rk rk-pl"><div class="rkIco">💿</div><div class="rkNm" style="color:#555">Platinum</div><div class="rkPts">700–1499 pts</div><div class="rkBen">Reduced fees</div></div>
+<div class="rk rk-dm"><div class="rkIco">💎</div><div class="rkNm" style="color:#1565C0">Diamond</div><div class="rkPts">1500–2999 pts</div><div class="rkBen">Top search rank</div></div>
+<div class="rk rk-ul"><div class="rkIco">⚡</div><div class="rkNm" style="color:#E91E63">Ultra</div><div class="rkPts">3000–4999 pts</div><div class="rkBen">Exclusive badge</div></div>
+<div class="rk rk-al"><div class="rkIco">👑</div><div class="rkNm" style="color:#FF4500">Alpha</div><div class="rkPts">5000+ pts</div><div class="rkBen">Elite status</div></div>
+</div></div>
+</div>
+<footer>
+<div class="ftTop" onclick="scrollTo(0,0)">▲ Back to top</div>
+<div class="ftMid">
+<div class="ftCol"><h4>THE MAINMAN</h4><a>About Us</a><a>Founder: Mainul Islam Shuvo</a><a>Careers</a></div>
+<div class="ftCol"><h4>Make Money</h4><a onclick="openSID()">Sell on THE MAINMAN</a><a>Affiliate Program</a></div>
+<div class="ftCol"><h4>Payment</h4><a>bKash</a><a>Nagad</a><a>STC Pay</a><a>Al Rajhi</a><a>Credit Card</a></div>
+<div class="ftCol"><h4>Help</h4><a>Help Center</a><a>Track Order</a><a>Returns</a><a>Privacy</a></div>
+</div>
+<div class="ftBot">
+<div class="ftLogo">THE<span>MAIN</span>MAN</div>
+<div>Founded by <strong>Mainul Islam Shuvo</strong> | 🇧🇩 Bangladesh & 🇸🇦 Saudi Arabia</div>
+<div style="margin-top:3px">© 2024 THE MAINMAN. All rights reserved.</div>
+</div>
+</footer>
+</div>
+
+<!-- SHOP PAGE -->
+<div class="page" id="page_shop">
+<div class="mw">
+<div class="shopWrap">
+<div class="sidebar">
+<div class="sbT">🔍 Filter</div>
+<div class="sbG"><div class="sbGT">Category</div>
+<label class="sbR"><input type="radio" name="fcat" value="all" checked onchange="applyF()"> All</label>
+<label class="sbR"><input type="radio" name="fcat" value="Clothing" onchange="applyF()"> 👕 Clothing</label>
+<label class="sbR"><input type="radio" name="fcat" value="Groceries" onchange="applyF()"> 🥦 Groceries</label>
+<label class="sbR"><input type="radio" name="fcat" value="Electronics" onchange="applyF()"> 📱 Electronics</label>
+<label class="sbR"><input type="radio" name="fcat" value="Beauty" onchange="applyF()"> 💄 Beauty</label>
+<label class="sbR"><input type="radio" name="fcat" value="Home" onchange="applyF()"> 🏠 Home</label>
+<label class="sbR"><input type="radio" name="fcat" value="Sports" onchange="applyF()"> ⚽ Sports</label>
+<label class="sbR"><input type="radio" name="fcat" value="Books" onchange="applyF()"> 📚 Books</label>
+</div>
+<div class="sbG"><div class="sbGT">Price (৳)</div>
+<div class="prRow"><input class="prInp" type="number" id="prMin" placeholder="Min"><span>—</span><input class="prInp" type="number" id="prMax" placeholder="Max"></div>
+<button class="applyBtn" onclick="applyF()">Apply</button>
+</div>
+<div class="sbG"><div class="sbGT">Rating</div>
+<label class="sbR"><input type="radio" name="frat" value="" checked onchange="applyF()"> All</label>
+<label class="sbR"><input type="radio" name="frat" value="4" onchange="applyF()"> ★★★★ & above</label>
+<label class="sbR"><input type="radio" name="frat" value="3" onchange="applyF()"> ★★★ & above</label>
+</div>
+</div>
+<div>
+<div class="shopTopBar">
+<div class="resCount" id="resCount">Loading...</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<input class="shopCtrl" type="text" id="shopSrch" placeholder="🔍 Search products..." oninput="applyF()" style="width:185px">
+<select class="shopCtrl" id="shopSort" onchange="applyF()">
+<option value="">Featured</option>
+<option value="pl">Price: Low to High</option>
+<option value="ph">Price: High to Low</option>
+<option value="rt">Top Rated</option>
+<option value="nw">Newest</option>
+</select>
+</div></div>
+<div class="pGrid" id="shopGrid"></div>
+<div id="shopEmpty" class="hide" style="text-align:center;padding:60px;background:#fff;border-radius:4px">
+<div style="font-size:52px;margin-bottom:12px">🔍</div>
+<div style="font-size:19px;font-weight:700;margin-bottom:5px">No results found</div>
+<div style="color:#565959">Try different keywords or remove filters</div>
+</div>
+</div></div></div></div>
+
+<!-- WISHLIST PAGE -->
+<div class="page" id="page_wishlist">
+<div class="wlPage">
+<div class="pgTitleBar">
+<div class="pgBigTitle">❤️ Wishlist (<span id="wlCount">0</span>)</div>
+<button class="secSee" onclick="goPage('shop')">Continue Shopping →</button>
+</div>
+<div id="wlEmpty" style="text-align:center;padding:55px;background:#fff;border-radius:4px;display:none">
+<div style="font-size:52px;margin-bottom:10px">❤️</div>
+<div style="font-size:18px;font-weight:600;margin-bottom:5px">Your wishlist is empty</div>
+<button class="aBtn" style="width:auto;padding:8px 22px;margin-top:10px" onclick="goPage('shop')">Start Shopping →</button>
+</div>
+<div class="pGrid" id="wlGrid"></div>
+</div></div>
+
+<!-- CART PAGE -->
+<div class="page" id="page_cart">
+<div class="cartPg">
+<div>
+<div class="cartBox">
+<div class="cartBoxTitle">🛒 Shopping Cart</div>
+<div id="cartEmpty" style="text-align:center;padding:45px;display:none">
+<div style="font-size:50px;margin-bottom:10px">🛒</div>
+<div style="font-size:17px;font-weight:600;margin-bottom:5px">Your cart is empty</div>
+<button class="aBtn" style="width:auto;padding:8px 22px;margin-top:10px" onclick="goPage('shop')">Shop Now →</button>
+</div>
+<div id="cartItems"></div>
+</div></div>
+<div>
+<div class="sumBox">
+<div style="font-size:16px;font-weight:700;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid #e8e8e8">Order Summary</div>
+<div class="sumLine"><span>Subtotal (<span id="cartItemC">0</span> items)</span><span id="cartSubT">৳0</span></div>
+<div class="sumLine"><span>Delivery</span><span style="color:#007600">FREE</span></div>
+<div class="sumTotal"><span>Total:</span><span id="cartGrandT">৳0</span></div>
+<button class="placeBtn" onclick="proceedOrder('cart')" style="margin-top:12px">Proceed to Order →</button>
+<div style="text-align:center;font-size:11px;color:#565959;margin-top:7px">🔒 Secure checkout</div>
+</div></div></div></div>
+
+<!-- ORDER PAGE -->
+<div class="page" id="page_order">
+<div class="ordPg">
+<div>
+<!-- STEP 1: Info -->
+<div class="ordSec">
+<div class="ordSecH"><span class="stepNum">1</span> Delivery Information</div>
+<div class="frow">
+<div class="fg"><label class="fl">First Name *</label><input class="fi" type="text" id="coFN" placeholder="First name"></div>
+<div class="fg"><label class="fl">Last Name *</label><input class="fi" type="text" id="coLN" placeholder="Last name"></div>
+</div>
+<div class="fg"><label class="fl">Email *</label><input class="fi" type="email" id="coEm" placeholder="email@example.com"></div>
+<div class="fg"><label class="fl">Country *</label>
+<select class="fs" id="coCo" onchange="onCoCountry()">
+<option value="">— Select country —</option>
+<option value="BD">🇧🇩 Bangladesh</option>
+<option value="SA">🇸🇦 Saudi Arabia</option>
+<option value="AE">🇦🇪 UAE</option>
+<option value="OT">🌍 Other</option>
+</select></div>
+<div class="fg"><label class="fl">Mobile Number *</label>
+<input class="fi" type="tel" id="coPh" placeholder="Enter your number" oninput="chkPhone('coPh','coPh_h','coCo')">
+<div class="phHint info" id="coPh_h"></div></div>
+<div class="fg"><label class="fl">Delivery Address *</label><textarea class="ft" id="coAddr" rows="2" placeholder="Street, Area, City, ZIP"></textarea></div>
+</div>
+<!-- STEP 2: Map -->
+<div class="ordSec">
+<div class="ordSecH"><span class="stepNum">2</span> Confirm Location on Map</div>
+<div style="font-size:13px;color:#565959;margin-bottom:9px">📍 Click on map or drag pin to your exact delivery location</div>
+<div class="mapSBar">
+<input type="text" id="mapQ" placeholder="Search location...">
+<button onclick="searchMap()" style="background:#FF9900;border:none;border-radius:3px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer">Search</button>
+<button onclick="getMyLoc()" class="mapLocBtn" style="border:none;border-radius:3px;padding:7px 10px;font-size:13px;cursor:pointer">📍 My Location</button>
+</div>
+<div id="mapEl"></div>
+<div class="locConf hide" id="locConf">✅ <span id="locTxt">Location confirmed</span></div>
+</div>
+<!-- STEP 3: Payment -->
+<div class="ordSec">
+<div class="ordSecH"><span class="stepNum">3</span> Payment Method</div>
+<div id="payMethods"><div style="color:#565959;font-size:13px">Please select your country above</div></div>
+<div id="payDetail"></div>
+</div>
+</div>
+<!-- RIGHT: Summary -->
+<div>
+<div class="ordSumBox">
+<div style="font-size:15px;font-weight:700;margin-bottom:12px;padding-bottom:7px;border-bottom:1px solid #e8e8e8">Your Order</div>
+<div id="ordPreview"></div>
+<div class="ordLine"><span>Subtotal</span><span id="ordSub">৳0</span></div>
+<div class="ordLine"><span>Delivery</span><span style="color:#007600">FREE</span></div>
+<div class="ordTotal"><span>Total</span><span id="ordTot">৳0</span></div>
+<button class="placeBtn" onclick="placeOrder()">Place Order →</button>
+<div style="text-align:center;font-size:11px;color:#565959;margin-top:7px">🔒 256-bit SSL Encrypted</div>
+</div></div></div></div>
+
+<!-- DEALS PAGE -->
+<div class="page" id="page_deals">
+<div class="mw" style="padding-top:12px">
+<div class="secCard">
+<div style="margin-bottom:12px"><div style="font-size:21px;font-weight:700">🏷️ Today's Deals</div><div style="font-size:13px;color:#565959;margin-top:3px">Best prices — updated daily</div></div>
+<div class="pGrid" id="dealsGrid"></div>
+</div></div></div>
+
+<!-- ORDER CONFIRM PAGE -->
+<div class="page" id="page_orderconf">
+<div class="ocPage">
+<div class="ocBox">
+<div class="ocIcon">✅</div>
+<div class="ocTitle">Order Confirmed!</div>
+<div class="ocId" id="ocID">Order #—</div>
+<div class="ocTrack">
+<div class="ocTrackTitle">📦 Order Status</div>
+<div class="tStep"><div class="tDot done"></div><strong>Order Placed</strong> — <span id="ocDate"></span></div>
+<div class="tStep"><div class="tDot cur"></div>Payment Verification — 1-2 hrs</div>
+<div class="tStep"><div class="tDot"></div>Seller Processing — 24 hrs</div>
+<div class="tStep"><div class="tDot"></div>Out for Delivery</div>
+<div class="tStep"><div class="tDot"></div>Delivered 📍</div>
+</div>
+<div class="ocPayInfo" id="ocPayInfo"></div>
+<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+<button class="aBtn" style="width:auto;padding:9px 22px;margin-bottom:0" onclick="goPage('profile');setPTab('orders')">View Orders</button>
+<button class="aBtnOut" style="width:auto;padding:9px 22px" onclick="goPage('home')">Continue Shopping</button>
+</div>
+</div></div></div>
+
+<!-- PROFILE PAGE -->
+<div class="page" id="page_profile">
+<div class="profPg">
+<div class="profBanner">
+<div class="profAva" id="profAva">?</div>
+<div>
+<div class="profName" id="profName">User</div>
+<div class="profEmail" id="profEmail">email</div>
+<div class="profBdgs" id="profBdgs"></div>
+</div>
+</div>
+<div class="pTabs">
+<button class="pTab on" onclick="setPTab('orders')">📦 Orders</button>
+<button class="pTab" onclick="setPTab('wishlist')">❤️ Wishlist</button>
+<button class="pTab" onclick="setPTab('seller')">🛍️ Seller Dashboard</button>
+<button class="pTab" onclick="setPTab('settings')">⚙️ Settings</button>
+</div>
+<div class="pPanel on" id="pp_orders"><div style="font-size:16px;font-weight:700;margin-bottom:12px">Your Orders</div><div id="ordersList"></div></div>
+<div class="pPanel" id="pp_wishlist"><div style="font-size:16px;font-weight:700;margin-bottom:12px">Saved Items</div><div class="pGrid" id="profWish"></div></div>
+<div class="pPanel" id="pp_seller"><div id="sellerDash"></div></div>
+<div class="pPanel" id="pp_settings">
+<div style="max-width:450px">
+<div style="font-size:16px;font-weight:700;margin-bottom:12px">Account Settings</div>
+<div class="fg"><label class="fl">Full Name</label><input class="fi" type="text" id="stNm"></div>
+<div class="fg"><label class="fl">Email</label><input class="fi" type="email" id="stEm"></div>
+<div class="fg"><label class="fl">Phone</label><input class="fi" type="tel" id="stPh"></div>
+<div class="fg"><label class="fl">Country</label><select class="fs" id="stCo"><option value="BD">🇧🇩 Bangladesh</option><option value="SA">🇸🇦 Saudi Arabia</option><option value="AE">🇦🇪 UAE</option><option value="OT">🌍 Other</option></select></div>
+<div class="fg"><label class="fl">Address</label><textarea class="ft" id="stAddr" rows="2"></textarea></div>
+<button class="aBtn" onclick="saveSettings()">Save Changes</button>
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:12px 0">
+<div style="font-size:15px;font-weight:700;margin-bottom:10px">Change Password</div>
+<div class="fg"><label class="fl">Current Password</label><input class="fi" type="password" placeholder="Current password"></div>
+<div class="fg"><label class="fl">New Password</label><input class="fi" type="password" placeholder="New password"></div>
+<button class="aBtnOut" onclick="toast('Password updated!','ok')">Update Password</button>
+<hr style="border:none;border-top:1px solid #e8e8e8;margin:12px 0">
+<button class="aBtn aBtnRed" onclick="doSignOut()">Sign Out</button>
+</div>
+</div>
+</div></div>
+
+<!-- ADMIN PAGE -->
+<div class="page" id="page_admin">
+<div class="adminPg">
+<div class="adminBanner">
+<div>
+<div class="adminTitle">⚙️ Admin Panel</div>
+<div class="adminSub">THE MAINMAN — Owner: Mainul Islam Shuvo</div>
+</div>
+<button class="aBtn" style="width:auto;padding:8px 18px;margin-bottom:0" onclick="openAddProd()">+ Add Product</button>
+</div>
+<div class="adminStats" id="adminStats"></div>
+<div class="adminTabs">
+<button class="adminTab on" onclick="setAdminTab('products')">📦 Products</button>
+<button class="adminTab" onclick="setAdminTab('orders')">🛒 Orders</button>
+<button class="adminTab" onclick="setAdminTab('users')">👥 Users</button>
+<button class="adminTab" onclick="setAdminTab('sellers')">🛍️ Sellers</button>
+<button class="adminTab" onclick="setAdminTab('github')">🐙 GitHub</button>
+</div>
+<div class="adminPanel on" id="ap_products">
+<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+<div style="font-size:15px;font-weight:700">All Products (<span id="adminProdCount">0</span>)</div>
+<div style="display:flex;gap:7px;flex-wrap:wrap">
+<input class="shopCtrl" type="text" id="adminSrch" placeholder="Search products..." oninput="renderAdminProds()" style="width:200px">
+<select class="shopCtrl" id="adminCatFil" onchange="renderAdminProds()">
+<option value="">All Categories</option>
+<option>Clothing</option><option>Groceries</option><option>Electronics</option>
+<option>Beauty</option><option>Home</option><option>Sports</option><option>Books</option>
+</select>
+</div></div>
+<div style="overflow-x:auto"><table class="adminProdTable" id="adminProdTable"></table></div>
+</div>
+<div class="adminPanel" id="ap_orders">
+<div style="font-size:15px;font-weight:700;margin-bottom:12px">All Orders (<span id="adminOrdCount">0</span>)</div>
+<div style="overflow-x:auto"><table class="adminOrderTable" id="adminOrdTable"></table></div>
+</div>
+<div class="adminPanel" id="ap_users">
+<div style="font-size:15px;font-weight:700;margin-bottom:12px">All Users (<span id="adminUserCount">0</span>)</div>
+<div style="overflow-x:auto"><table class="adminUserTable" id="adminUserTable"></table></div>
+</div>
+<div class="adminPanel" id="ap_sellers">
+<div style="font-size:15px;font-weight:700;margin-bottom:12px">All Sellers (<span id="adminSelCount">0</span>)</div>
+<div style="overflow-x:auto"><table class="adminUserTable" id="adminSelTable"></table></div>
+</div>
+<div class="adminPanel" id="ap_github">
+<div style="font-size:15px;font-weight:700;margin-bottom:12px">🐙 GitHub Integration</div>
+<div class="infoBx" style="margin-bottom:14px">
+<strong>📌 Add Products via GitHub:</strong><br>
+You can manage products from your GitHub repository. Export current products as JSON, edit them, and import back. This keeps your product catalog version-controlled.
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px">
+<button class="aBtn" style="width:auto;padding:9px 20px;margin-bottom:0" onclick="exportProdsJSON()">⬇️ Export Products as JSON</button>
+<button class="aBtnOut" style="width:auto;padding:9px 20px" onclick="document.getElementById('jsonImport').click()">⬆️ Import Products from JSON</button>
+<input type="file" id="jsonImport" accept=".json" class="hide" onchange="importProdsJSON(event)">
+</div>
+<div style="background:#f8f8f8;border-radius:4px;padding:14px;font-size:13px;line-height:1.7;border:1px solid #e8e8e8">
+<strong>How to use GitHub for product management:</strong><br>
+1. Export your products as JSON → edit in any text editor or VS Code<br>
+2. Commit the file to your GitHub repo<br>
+3. Import the updated JSON file here to update your store<br>
+4. OR: paste your GitHub raw JSON URL below to auto-fetch
+</div>
+<div class="fg" style="margin-top:12px"><label class="fl">GitHub Raw JSON URL (optional)</label>
+<input class="fi" type="url" id="ghURL" placeholder="https://raw.githubusercontent.com/yourname/repo/main/products.json">
+</div>
+<button class="aBtn aBtnPurple" style="width:auto;padding:9px 20px;margin-bottom:0" onclick="fetchGhProds()">🔄 Fetch from GitHub</button>
+</div>
+</div>
+</div></div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script>
+// ─── CONSTANTS ───────────────────────────────────────
+const PT_BDT = 29, PT_SAR = 3.75/110, MIN_W = 500, PTS_SALE = 5;
+const PHONE_RULES = {
+  BD: { re:/^01[3-9]\d{8}$/, hint:'BD: 01XXXXXXXXX (11 digits, starts 013-019)' },
+  SA: { re:/^05\d{8}$/, hint:'SA: 05XXXXXXXX (10 digits, starts 05)' },
+  AE: { re:/^05\d{8}$/, hint:'UAE: 05XXXXXXXX (10 digits, starts 05)' },
+  OT: { re:/.{6,}/, hint:'Enter a valid phone number (min 6 digits)' }
+};
+const RANKS = [
+  {n:'Bronze',i:'🥉',min:0,max:99,c:'#8B4513'},
+  {n:'Silver',i:'🥈',min:100,max:299,c:'#666'},
+  {n:'Gold',i:'🥇',min:300,max:699,c:'#B8860B'},
+  {n:'Platinum',i:'💿',min:700,max:1499,c:'#555'},
+  {n:'Diamond',i:'💎',min:1500,max:2999,c:'#1565C0'},
+  {n:'Ultra',i:'⚡',min:3000,max:4999,c:'#E91E63'},
+  {n:'Alpha',i:'👑',min:5000,max:Infinity,c:'#FF4500'}
+];
+const getRank = p => RANKS.find(r => p >= r.min && p <= r.max) || RANKS[0];
+const $ = id => document.getElementById(id);
+const LS = { get: k => { try { return JSON.parse(localStorage.getItem(k)) } catch(e) { return null } }, set: (k,v) => localStorage.setItem(k, JSON.stringify(v)) };
+
+// ─── STATE ───────────────────────────────────────────
+let CU = null, CART = [], WISH = [], PRODS = [], ORDER_ITEMS = [], SEL_PAY = null;
+let BN = 0, BT = null, MAP = null, MAP_MK = null, MAP_INIT = false, LOC = null;
+
+// ─── DEFAULT PRODUCTS ────────────────────────────────
+const DEFAULT_PRODS = [
+  // Clothing
+  {id:'p0',name:'Premium Cotton Panjabi',cat:'Clothing',price:1499,oldPrice:1999,emoji:'🧥',badge:'HOT',rating:4.9,reviews:234,desc:'Elegant embroidered panjabi. S–XXL. Eid & occasions.',seller:'MainMan Official',sellerId:'sid_off',stock:50,sold:120,createdAt:'2024-01-01'},
+  {id:'p1',name:'Slim Fit T-Shirt',cat:'Clothing',price:599,oldPrice:899,emoji:'👕',badge:'DEAL',rating:4.7,reviews:567,desc:'Soft 100% cotton. Multiple colors. XS–3XL.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:150,sold:400,createdAt:'2024-01-02'},
+  {id:'p2',name:'Women\'s Georgette Saree',cat:'Clothing',price:2499,oldPrice:3500,emoji:'👘',badge:'NEW',rating:4.8,reviews:123,desc:'Handcrafted georgette. Zari border. Weddings.',seller:'Saudi Connect',sellerId:'sid_b',stock:30,sold:60,createdAt:'2024-01-03'},
+  {id:'p3',name:'Men\'s Slim Fit Jeans',cat:'Clothing',price:1799,oldPrice:2499,emoji:'👖',badge:'',rating:4.6,reviews:89,desc:'Slim fit stretch denim. Sizes 28–40.',seller:'Top Deals BD',sellerId:'sid_c',stock:80,sold:200,createdAt:'2024-01-04'},
+  {id:'p4',name:'Sports Fleece Hoodie',cat:'Clothing',price:1299,oldPrice:1800,emoji:'🧤',badge:'HOT',rating:4.7,reviews:145,desc:'Thick fleece. Kangaroo pocket. Winter-ready.',seller:'MainMan Official',sellerId:'sid_off',stock:60,sold:180,createdAt:'2024-01-05'},
+  {id:'p5',name:'Summer Floral Dress',cat:'Clothing',price:999,oldPrice:1400,emoji:'👗',badge:'SALE',rating:4.5,reviews:78,desc:'Light breezy floral. Sizes S–XL.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:45,sold:90,createdAt:'2024-01-06'},
+  {id:'p6',name:'Formal Office Blazer',cat:'Clothing',price:3499,oldPrice:4999,emoji:'🎩',badge:'',rating:4.8,reviews:56,desc:'Professional slim-fit. Single button.',seller:'Saudi Connect',sellerId:'sid_b',stock:25,sold:40,createdAt:'2024-01-07'},
+  {id:'p7',name:'Kids Cartoon Tee Pack (3)',cat:'Clothing',price:599,oldPrice:899,emoji:'🎽',badge:'DEAL',rating:4.9,reviews:312,desc:'3-piece kids tees. Ages 2–12.',seller:'Top Deals BD',sellerId:'sid_c',stock:200,sold:500,createdAt:'2024-01-08'},
+  // Groceries
+  {id:'p8',name:'Organic Basmati Rice 5kg',cat:'Groceries',price:650,oldPrice:0,emoji:'🌾',badge:'HOT',rating:4.9,reviews:456,desc:'Premium organic Bangladeshi basmati. Long grain.',seller:'MainMan Official',sellerId:'sid_off',stock:100,sold:300,createdAt:'2024-01-09'},
+  {id:'p9',name:'Fresh Hilsa Fish 1kg',cat:'Groceries',price:1200,oldPrice:0,emoji:'🐟',badge:'TRENDING',rating:5.0,reviews:234,desc:'Fresh Padma Hilsa. Cleaned & ready.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:30,sold:150,createdAt:'2024-01-10'},
+  {id:'p10',name:'Saudi Ajwa Dates 500g',cat:'Groceries',price:650,oldPrice:0,emoji:'🌴',badge:'HOT',rating:5.0,reviews:567,desc:'Premium Saudi Ajwa. Ramadan special.',seller:'Saudi Connect',sellerId:'sid_b',stock:80,sold:400,createdAt:'2024-01-11'},
+  {id:'p11',name:'Sundarbans Honey 500g',cat:'Groceries',price:580,oldPrice:0,emoji:'🍯',badge:'NEW',rating:4.9,reviews:312,desc:'100% pure wild honey. Lab certified.',seller:'Top Deals BD',sellerId:'sid_c',stock:60,sold:200,createdAt:'2024-01-12'},
+  {id:'p12',name:'Pure Mustard Oil 1L',cat:'Groceries',price:280,oldPrice:0,emoji:'🫙',badge:'',rating:4.7,reviews:189,desc:'100% pure cold-pressed mustard oil.',seller:'MainMan Official',sellerId:'sid_off',stock:120,sold:350,createdAt:'2024-01-13'},
+  {id:'p13',name:'Mixed Fresh Vegetables 3kg',cat:'Groceries',price:350,oldPrice:0,emoji:'🥦',badge:'NEW',rating:4.6,reviews:123,desc:'Daily farm-fresh seasonal vegetables.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:50,sold:180,createdAt:'2024-01-14'},
+  {id:'p14',name:'Organic Turmeric 200g',cat:'Groceries',price:180,oldPrice:220,emoji:'🟡',badge:'DEAL',rating:4.8,reviews:234,desc:'100% organic. High curcumin.',seller:'Saudi Connect',sellerId:'sid_b',stock:100,sold:280,createdAt:'2024-01-15'},
+  {id:'p15',name:'Fresh Mangoes 2kg',cat:'Groceries',price:450,oldPrice:0,emoji:'🥭',badge:'HOT',rating:5.0,reviews:123,desc:'Rajshahi mangoes. Sweet & juicy.',seller:'Top Deals BD',sellerId:'sid_c',stock:40,sold:120,createdAt:'2024-01-16'},
+  // Electronics
+  {id:'p16',name:'True Wireless Earbuds Pro',cat:'Electronics',price:2499,oldPrice:3499,emoji:'🎧',badge:'HOT',rating:4.7,reviews:678,desc:'ANC. 30hr battery. IPX5. Fast charge.',seller:'MainMan Official',sellerId:'sid_off',stock:70,sold:320,createdAt:'2024-01-17'},
+  {id:'p17',name:'Smart Fitness Watch',cat:'Electronics',price:4999,oldPrice:7999,emoji:'⌚',badge:'DEAL',rating:4.5,reviews:345,desc:'SpO2, heart rate, sleep. 7-day battery.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:40,sold:180,createdAt:'2024-01-18'},
+  {id:'p18',name:'20000mAh Power Bank',cat:'Electronics',price:1899,oldPrice:2499,emoji:'🔋',badge:'',rating:4.8,reviews:234,desc:'20W fast charge. Dual USB + Type-C.',seller:'Saudi Connect',sellerId:'sid_b',stock:80,sold:250,createdAt:'2024-01-19'},
+  {id:'p19',name:'Bluetooth Speaker',cat:'Electronics',price:1599,oldPrice:2199,emoji:'🔊',badge:'SALE',rating:4.6,reviews:145,desc:'360° sound. IPX7. 12hr battery.',seller:'Top Deals BD',sellerId:'sid_c',stock:55,sold:160,createdAt:'2024-01-20'},
+  {id:'p20',name:'10" Ring Light + Stand',cat:'Electronics',price:999,oldPrice:1499,emoji:'💡',badge:'HOT',rating:4.8,reviews:234,desc:'3 color temps. 10 brightness levels.',seller:'MainMan Official',sellerId:'sid_off',stock:65,sold:200,createdAt:'2024-01-21'},
+  {id:'p21',name:'7-in-1 USB-C Hub',cat:'Electronics',price:1299,oldPrice:1799,emoji:'🔌',badge:'NEW',rating:4.7,reviews:89,desc:'HDMI 4K, 3×USB 3.0, SD+TF, 100W PD.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:90,sold:180,createdAt:'2024-01-22'},
+  // Beauty
+  {id:'p22',name:'Vitamin C Brightening Serum',cat:'Beauty',price:799,oldPrice:1199,emoji:'✨',badge:'HOT',rating:4.9,reviews:789,desc:'20% Vitamin C. Dark spot reduction.',seller:'Saudi Connect',sellerId:'sid_b',stock:100,sold:500,createdAt:'2024-01-23'},
+  {id:'p23',name:'Onion Black Seed Hair Oil',cat:'Beauty',price:549,oldPrice:749,emoji:'💆',badge:'TRENDING',rating:4.8,reviews:456,desc:'Growth boost. Reduces hair fall.',seller:'Top Deals BD',sellerId:'sid_c',stock:80,sold:350,createdAt:'2024-01-24'},
+  {id:'p24',name:'SPF 50+ Sunscreen Gel',cat:'Beauty',price:649,oldPrice:899,emoji:'☀️',badge:'',rating:4.9,reviews:345,desc:'Lightweight. PA+++. No white cast.',seller:'MainMan Official',sellerId:'sid_off',stock:120,sold:400,createdAt:'2024-01-25'},
+  {id:'p25',name:'Oud Al Riyadh Perfume 50ml',cat:'Beauty',price:1899,oldPrice:2499,emoji:'🌹',badge:'HOT',rating:5.0,reviews:345,desc:'Luxury Arabian Oud. 24hr longevity.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:35,sold:150,createdAt:'2024-01-26'},
+  {id:'p26',name:'Neem Turmeric Face Wash',cat:'Beauty',price:349,oldPrice:499,emoji:'🧼',badge:'NEW',rating:4.7,reviews:234,desc:'Natural acne control. Oily skin.',seller:'Saudi Connect',sellerId:'sid_b',stock:150,sold:350,createdAt:'2024-01-27'},
+  // Home
+  {id:'p27',name:'Kitchen Knife Set 6pc',cat:'Home',price:1799,oldPrice:2499,emoji:'🔪',badge:'HOT',rating:4.7,reviews:123,desc:'German-grade stainless. Wooden block.',seller:'Top Deals BD',sellerId:'sid_c',stock:40,sold:120,createdAt:'2024-01-28'},
+  {id:'p28',name:'Air Purifier HEPA H13',cat:'Home',price:4999,oldPrice:7499,emoji:'🌬️',badge:'NEW',rating:4.9,reviews:89,desc:'True HEPA H13. 40m². 25dB quiet.',seller:'MainMan Official',sellerId:'sid_off',stock:20,sold:60,createdAt:'2024-01-29'},
+  {id:'p29',name:'Scented Candle Set (3)',cat:'Home',price:449,oldPrice:699,emoji:'🕯️',badge:'SALE',rating:4.9,reviews:234,desc:'Soy wax. Oud, Vanilla, Sandalwood.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:80,sold:200,createdAt:'2024-01-30'},
+  {id:'p30',name:'Non-Stick Cookware 5pc',cat:'Home',price:2299,oldPrice:3499,emoji:'🍳',badge:'HOT',rating:4.6,reviews:167,desc:'Granite-coated. Induction. PFOA-free.',seller:'Saudi Connect',sellerId:'sid_b',stock:30,sold:90,createdAt:'2024-01-31'},
+  // Sports
+  {id:'p31',name:'Premium Yoga Mat 6mm',cat:'Sports',price:899,oldPrice:1299,emoji:'🧘',badge:'HOT',rating:4.8,reviews:345,desc:'Non-slip TPE. 183×61cm. Carry strap.',seller:'Top Deals BD',sellerId:'sid_c',stock:70,sold:220,createdAt:'2024-02-01'},
+  {id:'p32',name:'Running & Walking Shoes',cat:'Sports',price:2999,oldPrice:4499,emoji:'👟',badge:'TRENDING',rating:4.6,reviews:145,desc:'Breathable mesh. Cushioned. Sizes 36–46.',seller:'MainMan Official',sellerId:'sid_off',stock:50,sold:160,createdAt:'2024-02-02'},
+  {id:'p33',name:'Resistance Bands Set (5)',cat:'Sports',price:699,oldPrice:999,emoji:'🏋️',badge:'NEW',rating:4.7,reviews:234,desc:'5 resistance levels. Anti-snap.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:100,sold:280,createdAt:'2024-02-03'},
+  {id:'p34',name:'Official Size 5 Football',cat:'Sports',price:799,oldPrice:1199,emoji:'⚽',badge:'',rating:4.7,reviews:189,desc:'FIFA quality PVC. Machine-stitched.',seller:'Saudi Connect',sellerId:'sid_b',stock:60,sold:180,createdAt:'2024-02-04'},
+  // Books
+  {id:'p35',name:'Islamic Finance Guide',cat:'Books',price:499,oldPrice:699,emoji:'📗',badge:'HOT',rating:4.9,reviews:234,desc:'Halal investing & Islamic banking. 350 pages.',seller:'Top Deals BD',sellerId:'sid_c',stock:80,sold:200,createdAt:'2024-02-05'},
+  {id:'p36',name:'Bangla Story Books (5)',cat:'Books',price:599,oldPrice:899,emoji:'📖',badge:'',rating:4.9,reviews:456,desc:'5-book set. 50 folk tales. Ages 4–10.',seller:'MainMan Official',sellerId:'sid_off',stock:100,sold:300,createdAt:'2024-02-06'},
+  {id:'p37',name:'Spoken English in 30 Days',cat:'Books',price:299,oldPrice:499,emoji:'📘',badge:'DEAL',rating:4.7,reviews:312,desc:'English fluency for Bangla speakers.',seller:'Fashion Hub BD',sellerId:'sid_a',stock:120,sold:350,createdAt:'2024-02-07'},
+  {id:'p38',name:'Saudi Arabic Phrasebook',cat:'Books',price:349,oldPrice:499,emoji:'📙',badge:'NEW',rating:4.6,reviews:78,desc:'Arabic for Bangladeshi expats. 500+ phrases.',seller:'Saudi Connect',sellerId:'sid_b',stock:60,sold:140,createdAt:'2024-02-08'}
+];
+
+// ─── INIT ────────────────────────────────────────────
+function init() {
+  // Load products (custom or default)
+  const saved = LS.get('mm_prods');
+  PRODS = saved && saved.length > 0 ? saved : [...DEFAULT_PRODS];
+  // Load user session
+  const u = LS.get('mm_cur');
+  if (u) { CU = u; updateHdrUser(); }
+  // Load cart & wishlist
+  CART = LS.get('mm_cart') || [];
+  WISH = LS.get('mm_wish') || [];
+  updateCartBadge();
+  // Init banner
+  initBanner();
+  // Render home
+  renderHome();
+  // Admin nav visibility
+  checkAdminNav();
+}
+
+function checkAdminNav() {
+  const adminLink = $('adminNavLink');
+  if (adminLink) adminLink.style.display = (CU && CU.role === 'admin') ? 'inline-flex' : 'none';
+}
+
+// ─── NAVIGATION ──────────────────────────────────────
+function goPage(pg) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('show'));
+  const el = $('page_' + pg);
+  if (!el) { console.warn('Page not found:', pg); return; }
+  el.classList.add('show');
+  window.scrollTo(0, 0);
+  document.querySelectorAll('.hNav a').forEach(a => a.classList.remove('act'));
+  const nv = $('nav_' + pg);
+  if (nv) nv.classList.add('act');
+  // Page-specific init
+  if (pg === 'shop') renderShop();
+  if (pg === 'profile') renderProfile();
+  if (pg === 'order') { renderOrderPage(); setTimeout(initMap, 350); }
+  if (pg === 'deals') renderDeals();
+  if (pg === 'wishlist') renderWishPage();
+  if (pg === 'cart') renderCartPage();
+  if (pg === 'admin') renderAdmin();
+}
+
+function goCat(cat) {
+  goPage('shop');
+  document.querySelectorAll('[name="fcat"]').forEach(r => r.checked = (r.value === cat));
+  applyF();
+}
+
+function doSearch() {
+  const q = $('srchIn').value.trim();
+  goPage('shop');
+  $('shopSrch').value = q;
+  applyF();
+}
+
+// ─── BANNER ──────────────────────────────────────────
+function initBanner() {
+  const slides = document.querySelectorAll('.banSlide');
+  const dotsEl = $('bDots');
+  if (!dotsEl) return;
+  dotsEl.innerHTML = [...slides].map((_, i) =>
+    `<button class="bDot ${i===0?'on':''}" onclick="gotoBan(${i})"></button>`
+  ).join('');
+  BT = setInterval(() => slideBan(1), 5000);
+}
+function slideBan(d) {
+  const s = document.querySelectorAll('.banSlide').length;
+  BN = (BN + d + s) % s;
+  updateBan();
+}
+function gotoBan(i) { BN = i; updateBan(); }
+function updateBan() {
+  const track = $('banTrack');
+  if (track) track.style.transform = `translateX(-${BN * 100}%)`;
+  document.querySelectorAll('.bDot').forEach((d, i) => d.classList.toggle('on', i === BN));
+  clearInterval(BT);
+  BT = setInterval(() => slideBan(1), 5000);
+}
+
+// ─── HOME RENDER ─────────────────────────────────────
+function renderHome() {
+  const QB = [
+    {t:'Trending Fashion',c:'Clothing',items:[{e:'🧥',n:'Panjabi'},{e:'👕',n:'T-Shirts'},{e:'👗',n:'Dresses'},{e:'👖',n:'Jeans'}]},
+    {t:'Fresh Groceries',c:'Groceries',items:[{e:'🐟',n:'Fish'},{e:'🥦',n:'Vegetables'},{e:'🌾',n:'Rice'},{e:'🍯',n:'Honey'}]},
+    {t:'Electronics',c:'Electronics',items:[{e:'🎧',n:'Earbuds'},{e:'⌚',n:'Watch'},{e:'🔋',n:'Power Bank'},{e:'💡',n:'Ring Light'}]},
+    {t:'Beauty',c:'Beauty',items:[{e:'✨',n:'Serum'},{e:'☀️',n:'Sunscreen'},{e:'🌹',n:'Perfume'},{e:'💆',n:'Hair Oil'}]}
+  ];
+  const qb = $('qBoxes');
+  if (qb) qb.innerHTML = QB.map(q => `
+    <div class="qBox" onclick="goCat('${q.c}')">
+      <div class="qBoxTitle">${q.t}</div>
+      <div class="qGrid">${q.items.map(i => `<div class="qItem"><div class="qImg">${i.e}</div><div class="qNm">${i.n}</div></div>`).join('')}</div>
+      <div class="qSee">See all →</div>
+    </div>`).join('');
+  const hp = $('homeProd');
+  if (hp) hp.innerHTML = PRODS.slice(0, 12).map(p => pCard(p)).join('');
+  const hd = $('homeDeals');
+  if (hd) hd.innerHTML = PRODS.filter(p => p.oldPrice > 0).slice(0, 12).map(p => `
+    <div class="dCard" onclick="openPD('${p.id}')">
+      <div class="dImg">${p.emoji}</div>
+      <div class="dInfo">
+        <div class="dOff">-${Math.round((p.oldPrice-p.price)/p.oldPrice*100)}%</div>
+        <div class="dNm">${p.name}</div>
+        <div class="dPr">৳${p.price.toLocaleString()}</div>
+      </div>
+    </div>`).join('');
+}
+
+function renderDeals() {
+  const g = $('dealsGrid');
+  if (g) g.innerHTML = PRODS.filter(p => p.oldPrice > 0 || ['DEAL','SALE','HOT'].includes(p.badge)).map(p => pCard(p)).join('');
+}
+
+// ─── PRODUCT CARD ────────────────────────────────────
+function pCard(p) {
+  const iw = WISH.includes(p.id);
+  const disc = p.oldPrice > 0 ? Math.round((p.oldPrice - p.price) / p.oldPrice * 100) : 0;
+  const bc = { HOT: 'bHot', NEW: 'bNew', DEAL: 'bDeal', TRENDING: 'bTrend', SALE: 'bHot' }[p.badge] || '';
+  return `<div class="pCard">
+    <div class="pImg" onclick="openPD('${p.id}')">
+      <div class="pEmoji">${p.emoji}</div>
+      ${p.badge ? `<div class="pBdg ${bc}">${p.badge}</div>` : ''}
+      <div class="pWish" onclick="event.stopPropagation();toggleWish('${p.id}')">${iw ? '❤️' : '🤍'}</div>
+    </div>
+    <div class="pBody" onclick="openPD('${p.id}')">
+      <div class="pSeller">🛍️ ${p.seller}</div>
+      <div class="pName">${p.name}</div>
+      <div><span class="pStars">${'★'.repeat(Math.round(p.rating))}</span><span class="pRc">(${p.reviews})</span></div>
+      <div class="pPrice">৳${p.price.toLocaleString()}${p.oldPrice > 0 ? `<span class="pOld">৳${p.oldPrice.toLocaleString()}</span><span class="pDisc">-${disc}%</span>` : ''}</div>
+      <div class="pDel">✈️ Fast Delivery Available</div>
+    </div>
+    <div class="pBtns">
+      <button class="btnAC" onclick="addCart('${p.id}')">Add to Cart</button>
+      <button class="btnBN" onclick="buyNow('${p.id}')">Buy Now</button>
+      <button class="btnWL" onclick="toggleWish('${p.id}')">${iw ? '❤️ Saved' : '🤍 Wishlist'}</button>
+    </div>
+  </div>`;
+}
+
+// ─── PRODUCT DETAIL ──────────────────────────────────
+function openPD(id) {
+  const p = PRODS.find(x => x.id === id);
+  if (!p) return;
+  const disc = p.oldPrice > 0 ? Math.round((p.oldPrice - p.price) / p.oldPrice * 100) : 0;
+  $('pdTitle').textContent = p.name;
+  $('pdBody').innerHTML = `
+    <div style="display:grid;grid-template-columns:1fr 1.1fr;gap:18px">
+      <div style="background:#f8f8f8;border-radius:4px;height:250px;display:flex;align-items:center;justify-content:center;font-size:105px">${p.emoji}</div>
+      <div>
+        <div style="font-size:12px;color:#007185;margin-bottom:5px">🛍️ ${p.seller}</div>
+        ${p.badge ? `<span style="background:#CC0C39;color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:2px">${p.badge}</span>` : ''}
+        <div style="font-size:18px;font-weight:700;line-height:1.3;margin:6px 0 7px">${p.name}</div>
+        <div style="margin-bottom:7px"><span style="color:#FF9900">${'★'.repeat(Math.round(p.rating))}</span> <span style="font-size:12px;color:#007185">${p.rating} · (${p.reviews} ratings)</span></div>
+        <div style="font-size:22px;font-weight:700;margin-bottom:3px">৳${p.price.toLocaleString()}${p.oldPrice > 0 ? `<span style="font-size:13px;color:#565959;text-decoration:line-through;margin-left:5px">৳${p.oldPrice.toLocaleString()}</span><span style="font-size:12px;color:#CC0C39"> -${disc}%</span>` : ''}</div>
+        <div style="color:#007600;font-size:12px;margin-bottom:9px">✅ In Stock — ${p.stock} available</div>
+        <div style="font-size:13px;color:#565959;line-height:1.6;margin-bottom:13px">${p.desc}</div>
+        <div style="display:flex;flex-direction:column;gap:7px">
+          <button class="btnAC" style="border-radius:3px;padding:9px;font-size:14px" onclick="addCart('${p.id}');closeOv('ovPD')">Add to Cart</button>
+          <button class="btnBN" style="border-radius:3px;padding:8px;font-size:13px" onclick="buyNow('${p.id}')">Buy Now</button>
+          <button class="btnWL" style="border-radius:3px;padding:7px;font-size:13px" onclick="toggleWish('${p.id}')">${WISH.includes(p.id) ? '❤️ Remove from Wishlist' : '🤍 Add to Wishlist'}</button>
+        </div>
+      </div>
+    </div>`;
+  openOv('ovPD');
+}
+
+// ─── CART ────────────────────────────────────────────
+function addCart(id) {
+  if (!CU) { openOv('ovAuth'); toast('Please sign in to add items', 'inf'); return; }
+  const p = PRODS.find(x => x.id === id);
+  if (!p) return;
+  const ex = CART.find(c => c.id === id);
+  if (ex) ex.qty++;
+  else CART.push({ ...p, qty: 1 });
+  LS.set('mm_cart', CART);
+  updateCartBadge();
+  toast(`${p.emoji} "${p.name}" added to cart!`, 'ok');
+}
+
+function buyNow(id) {
+  if (!CU) { openOv('ovAuth'); toast('Please sign in first', 'inf'); return; }
+  const p = PRODS.find(x => x.id === id);
+  if (!p) return;
+  ORDER_ITEMS = [{ ...p, qty: 1 }];
+  closeOv('ovPD');
+  goPage('order');
+}
+
+function updateCartBadge() {
+  const tot = CART.reduce((s, c) => s + c.qty, 0);
+  $('cartBadge').textContent = tot;
+}
+
+function renderCartPage() {
+  const itemsEl = $('cartItems');
+  const emptyEl = $('cartEmpty');
+  if (!itemsEl) return;
+  if (CART.length === 0) {
+    itemsEl.innerHTML = '';
+    emptyEl.style.display = 'block';
+    $('cartSubT').textContent = '৳0';
+    $('cartGrandT').textContent = '৳0';
+    $('cartItemC').textContent = '0';
+    return;
+  }
+  emptyEl.style.display = 'none';
+  itemsEl.innerHTML = CART.map(c => `
+    <div class="cartItem">
+      <div class="ciImg">${c.emoji}</div>
+      <div class="ciInfo">
+        <div class="ciName">${c.name}</div>
+        <div class="ciSeller">🛍️ ${c.seller}</div>
+        <div class="ciPrice">৳${(c.price * c.qty).toLocaleString()}</div>
+        <div class="ciActs">
+          <div class="qtyCtrl">
+            <button class="qtyB" onclick="chgQty('${c.id}',-1)">−</button>
+            <span class="qtyV">${c.qty}</span>
+            <button class="qtyB" onclick="chgQty('${c.id}',1)">+</button>
+          </div>
+          <span class="actLink" onclick="moveToWish('${c.id}')">Move to Wishlist</span>
+          <span class="actLink" onclick="remCart('${c.id}')">Remove</span>
+        </div>
+      </div>
+    </div>`).join('');
+  const tot = CART.reduce((s, c) => s + c.price * c.qty, 0);
+  $('cartItemC').textContent = CART.reduce((s, c) => s + c.qty, 0);
+  $('cartSubT').textContent = '৳' + tot.toLocaleString();
+  $('cartGrandT').textContent = '৳' + tot.toLocaleString();
+}
+
+function chgQty(id, d) {
+  const c = CART.find(x => x.id === id);
+  if (!c) return;
+  c.qty += d;
+  if (c.qty <= 0) remCart(id);
+  else { LS.set('mm_cart', CART); updateCartBadge(); renderCartPage(); }
+}
+function remCart(id) {
+  CART = CART.filter(c => c.id !== id);
+  LS.set('mm_cart', CART);
+  updateCartBadge();
+  renderCartPage();
+}
+function moveToWish(id) {
+  if (!WISH.includes(id)) WISH.push(id);
+  LS.set('mm_wish', WISH);
+  remCart(id);
+  toast('Moved to Wishlist!', 'ok');
+}
+function proceedOrder(from) {
+  if (!CU) { openOv('ovAuth'); return; }
+  if (from === 'cart') {
+    if (CART.length === 0) { toast('Your cart is empty', 'err'); return; }
+    ORDER_ITEMS = [...CART];
+  }
+  goPage('order');
+}
+
+// ─── WISHLIST ────────────────────────────────────────
+function toggleWish(id) {
+  if (!CU) { openOv('ovAuth'); toast('Sign in to save items', 'inf'); return; }
+  if (WISH.includes(id)) {
+    WISH = WISH.filter(w => w !== id);
+    toast('Removed from Wishlist', 'inf');
+  } else {
+    WISH.push(id);
+    toast('❤️ Saved to Wishlist!', 'ok');
+  }
+  LS.set('mm_wish', WISH);
+  renderHome();
+  applyF();
+  renderWishPage();
+}
+
+function renderWishPage() {
+  const g = $('wlGrid');
+  const em = $('wlEmpty');
+  const cnt = $('wlCount');
+  if (!g) return;
+  const items = PRODS.filter(p => WISH.includes(p.id));
+  if (cnt) cnt.textContent = items.length;
+  if (items.length === 0) {
+    g.innerHTML = '';
+    em.style.display = 'block';
+  } else {
+    em.style.display = 'none';
+    g.innerHTML = items.map(p => pCard(p)).join('');
+  }
+}
+
+// ─── SHOP ────────────────────────────────────────────
+function renderShop() { applyF(); }
+function applyF() {
+  const cat = document.querySelector('[name="fcat"]:checked')?.value || 'all';
+  const sort = $('shopSort')?.value || '';
+  const srch = ($('shopSrch')?.value || '').toLowerCase();
+  const pmin = parseFloat($('prMin')?.value) || 0;
+  const pmax = parseFloat($('prMax')?.value) || Infinity;
+  const rat = parseFloat(document.querySelector('[name="frat"]:checked')?.value) || 0;
+  let f = PRODS.filter(p =>
+    (cat === 'all' || p.cat === cat) &&
+    (!srch || p.name.toLowerCase().includes(srch) || p.cat.toLowerCase().includes(srch)) &&
+    p.price >= pmin && p.price <= pmax && p.rating >= rat
+  );
+  if (sort === 'pl') f.sort((a, b) => a.price - b.price);
+  else if (sort === 'ph') f.sort((a, b) => b.price - a.price);
+  else if (sort === 'rt') f.sort((a, b) => b.rating - a.rating);
+  else if (sort === 'nw') f.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  const g = $('shopGrid'), em = $('shopEmpty'), rc = $('resCount');
+  if (rc) rc.textContent = `${f.length} result${f.length !== 1 ? 's' : ''}`;
+  if (f.length === 0) { g.innerHTML = ''; em.classList.remove('hide'); }
+  else { em.classList.add('hide'); g.innerHTML = f.map(p => pCard(p)).join(''); }
+}
+
+// ─── ORDER PAGE ──────────────────────────────────────
+function renderOrderPage() {
+  if (!CU) { goPage('home'); openOv('ovAuth'); return; }
+  const fn = $('coFN'); if (fn) fn.value = CU.name.split(' ')[0] || '';
+  const ln = $('coLN'); if (ln) ln.value = CU.name.split(' ').slice(1).join(' ') || '';
+  const em = $('coEm'); if (em) em.value = CU.email;
+  const ph = $('coPh'); if (ph) ph.value = CU.phone || '';
+  const co = $('coCo'); if (co && CU.country) co.value = CU.country;
+  onCoCountry();
+  renderOrdSummary();
+}
+
+function renderOrdSummary() {
+  const items = ORDER_ITEMS.length > 0 ? ORDER_ITEMS : CART;
+  const pr = $('ordPreview');
+  if (!pr) return;
+  pr.innerHTML = items.map(c =>
+    `<div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:7px;align-items:center">
+      <div style="display:flex;align-items:center;gap:5px"><span>${c.emoji}</span><span>${c.name} ×${c.qty}</span></div>
+      <strong>৳${(c.price * c.qty).toLocaleString()}</strong>
+    </div>`
+  ).join('');
+  const tot = items.reduce((s, c) => s + c.price * c.qty, 0);
+  const sub = $('ordSub'); if (sub) sub.textContent = '৳' + tot.toLocaleString();
+  const totEl = $('ordTot'); if (totEl) totEl.textContent = '৳' + tot.toLocaleString();
+}
+
+function onCoCountry() {
+  const co = $('coCo')?.value;
+  if (!co) return;
+  chkPhone('coPh', 'coPh_h', 'coCo');
+  renderPayMethods(co);
+}
+
+function renderPayMethods(co) {
+  const area = $('payMethods');
+  if (!area) return;
+  const M = {
+    BD: [{id:'bkash',i:'💚',n:'bKash',d:'Mobile wallet — instant'},{id:'nagad',i:'🟠',n:'Nagad',d:'Digital wallet — instant'},{id:'bank',i:'🏦',n:'Bank Transfer',d:'Standard bank payment'},{id:'card',i:'💳',n:'Credit/Debit Card',d:'Visa, Mastercard, Amex'}],
+    SA: [{id:'stc',i:'📲',n:'STC Pay',d:'Saudi mobile wallet — instant'},{id:'alrajhi',i:'🏦',n:'Al Rajhi Online',d:'Bank transfer — 1-2 days'},{id:'card',i:'💳',n:'Credit/Debit Card',d:'Visa, Mastercard, Amex'}],
+    AE: [{id:'card',i:'💳',n:'Credit/Debit Card',d:'Visa, Mastercard, Amex'}],
+    OT: [{id:'card',i:'💳',n:'Credit/Debit Card',d:'Visa, Mastercard, Amex'}]
+  };
+  const opts = M[co] || M['OT'];
+  area.innerHTML = `<div class="pmOpts">${opts.map(m =>
+    `<div class="pmOpt" id="pm_${m.id}" onclick="selPay('${m.id}')">
+      <div class="pmIco">${m.i}</div>
+      <div><div class="pmNm">${m.n}</div><div class="pmDesc">${m.d}</div></div>
+      <div class="pmRadio" id="pmR_${m.id}"></div>
+    </div>`
+  ).join('')}</div>`;
+  SEL_PAY = null;
+  $('payDetail').innerHTML = '';
+}
+
+function selPay(id) {
+  SEL_PAY = id;
+  document.querySelectorAll('.pmOpt').forEach(e => e.classList.remove('sel'));
+  document.querySelectorAll('.pmRadio').forEach(e => { e.classList.remove('on'); e.innerHTML = ''; });
+  const opt = $('pm_' + id); if (opt) opt.classList.add('sel');
+  const radio = $('pmR_' + id); if (radio) { radio.classList.add('on'); radio.innerHTML = '<div class="pmDot"></div>'; }
+  renderPayForm(id);
+}
+
+function renderPayForm(id) {
+  const area = $('payDetail');
+  if (!area) return;
+  const items = ORDER_ITEMS.length > 0 ? ORDER_ITEMS : CART;
+  const tot = items.reduce((s, c) => s + c.price * c.qty, 0);
+  const forms = {
+    bkash: `<div class="payForm">
+      <div class="payFormTitle">💚 bKash Payment Details</div>
+      <div class="payInstrBox" style="background:#E2136E">
+        <strong>Step 1:</strong> bKash App → <strong>Send Money</strong><br>
+        <strong>Step 2:</strong> Number: <strong>01XXXXXXXXX</strong><br>
+        <strong>Step 3:</strong> Amount: ৳${tot.toLocaleString()} → Reference: <strong>MAINMAN</strong><br>
+        <strong>Step 4:</strong> Copy your Transaction ID below
+      </div>
+      <div class="fg"><label class="fl">bKash Number you paid from *</label>
+        <input class="fi" type="tel" id="pBkNum" placeholder="01XXXXXXXXX" oninput="chkBkNum()">
+        <div class="phHint info" id="pBkNum_h"></div></div>
+      <div class="fg"><label class="fl">Transaction ID *</label>
+        <input class="fi" type="text" id="pBkTxn" placeholder="e.g. ABC12345678" style="letter-spacing:1px">
+        <div style="font-size:11px;color:#565959;margin-top:3px">Find in bKash SMS or app history</div></div>
+      <div class="fg"><label class="fl">Amount Paid (৳) *</label>
+        <input class="fi" type="number" id="pBkAmt" placeholder="৳${tot}"></div>
+    </div>`,
+    nagad: `<div class="payForm">
+      <div class="payFormTitle">🟠 Nagad Payment Details</div>
+      <div class="payInstrBox" style="background:#F7941D">
+        <strong>Step 1:</strong> Nagad App → <strong>Send Money</strong><br>
+        <strong>Step 2:</strong> Number: <strong>01XXXXXXXXX</strong><br>
+        <strong>Step 3:</strong> Amount: ৳${tot.toLocaleString()} → Reference: <strong>MAINMAN</strong><br>
+        <strong>Step 4:</strong> Copy your Transaction ID below
+      </div>
+      <div class="fg"><label class="fl">Nagad Number you paid from *</label>
+        <input class="fi" type="tel" id="pNgNum" placeholder="01XXXXXXXXX" oninput="chkNgNum()">
+        <div class="phHint info" id="pNgNum_h"></div></div>
+      <div class="fg"><label class="fl">Transaction ID *</label>
+        <input class="fi" type="text" id="pNgTxn" placeholder="e.g. TXN123456">
+        <div style="font-size:11px;color:#565959;margin-top:3px">Find in Nagad app → Transaction History</div></div>
+      <div class="fg"><label class="fl">Amount Paid (৳) *</label>
+        <input class="fi" type="number" id="pNgAmt" placeholder="৳${tot}"></div>
+    </div>`,
+    bank: `<div class="payForm">
+      <div class="payFormTitle">🏦 Bank Transfer Details</div>
+      <div class="payInstrBox" style="background:#232F3E">
+        <strong>Account Name:</strong> THE MAINMAN<br>
+        <strong>Bank:</strong> Dutch-Bangla Bank Ltd<br>
+        <strong>Account No:</strong> XXXX-XXXXX-XXXXX<br>
+        <strong>Reference:</strong> MAINMAN ORDER
+      </div>
+      <div class="fg"><label class="fl">Your Bank Name *</label><input class="fi" type="text" id="pBankNm" placeholder="e.g. DBBL, Islami Bank"></div>
+      <div class="fg"><label class="fl">Your Account Number *</label><input class="fi" type="text" id="pBankAcc" placeholder="Your account number"></div>
+      <div class="fg"><label class="fl">Transaction Reference *</label><input class="fi" type="text" id="pBankRef" placeholder="Bank transaction reference"></div>
+      <div class="fg"><label class="fl">Transfer Date *</label><input class="fi" type="date" id="pBankDate"></div>
+    </div>`,
+    stc: `<div class="payForm" style="background:linear-gradient(135deg,#1a1a2e,#16213e);border-color:#333">
+      <div class="payFormTitle" style="color:#FF9900;border-color:#333">📲 STC Pay Payment</div>
+      <div class="payInstrBox" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);border-radius:6px;color:#fff">
+        <strong style="color:#FF9900">Step 1:</strong> Open STC Pay App<br>
+        <strong style="color:#FF9900">Step 2:</strong> Tap Transfer → Number: <strong>05XXXXXXXX</strong><br>
+        <strong style="color:#FF9900">Step 3:</strong> Amount → Note: <strong>MAINMAN</strong><br>
+        <strong style="color:#FF9900">Step 4:</strong> Copy Transaction ID below
+      </div>
+      <div class="fg"><label class="fl" style="color:#ccc">STC Pay Number (paid from) *</label>
+        <input class="fi" type="tel" id="pStcNum" placeholder="05XXXXXXXX" style="background:#222;color:#fff;border-color:#555">
+        <div class="phHint info" id="pStcNum_h"></div></div>
+      <div class="fg"><label class="fl" style="color:#ccc">Transaction ID *</label>
+        <input class="fi" type="text" id="pStcTxn" placeholder="STC Pay Transaction ID" style="background:#222;color:#fff;border-color:#555"></div>
+    </div>`,
+    alrajhi: `<div class="payForm">
+      <div class="payFormTitle">🏦 Al Rajhi Bank Transfer</div>
+      <div class="payInstrBox" style="background:#006B3F">
+        <strong>Account Name:</strong> THE MAINMAN<br>
+        <strong>IBAN:</strong> SA XX XXXX XXXX XXXX XXXX XXXX<br>
+        <strong>Bank:</strong> Al Rajhi Bank<br>
+        <strong>Reference:</strong> MAINMAN ORDER
+      </div>
+      <div class="fg"><label class="fl">Your IBAN / Account *</label><input class="fi" type="text" id="pAlrIBAN" placeholder="SA XX XXXX..."></div>
+      <div class="fg"><label class="fl">Transaction Reference *</label><input class="fi" type="text" id="pAlrRef" placeholder="Al Rajhi reference no."></div>
+    </div>`,
+    card: `<div class="payForm">
+      <div class="payFormTitle">💳 Card Payment</div>
+      <div class="fg"><label class="fl">Card Number *</label><input class="fi" type="text" id="pCardNum" placeholder="XXXX XXXX XXXX XXXX" maxlength="19" oninput="fmtCard(this)"></div>
+      <div class="frow">
+        <div class="fg"><label class="fl">Expiry (MM/YY) *</label><input class="fi" type="text" id="pCardExp" placeholder="MM/YY" maxlength="5"></div>
+        <div class="fg"><label class="fl">CVV *</label><input class="fi" type="password" id="pCardCVV" placeholder="XXX" maxlength="4"></div>
+      </div>
+      <div class="fg"><label class="fl">Cardholder Name *</label><input class="fi" type="text" id="pCardNm" placeholder="Name on card"></div>
+      <div style="font-size:12px;color:#565959;margin-top:5px">🔒 Secured • 💳 Visa • 💳 Mastercard • 💳 Amex</div>
+    </div>`
+  };
+  area.innerHTML = forms[id] || '';
+}
+
+function fmtCard(el) {
+  let v = el.value.replace(/\D/g, '').slice(0, 16);
+  el.value = v.replace(/(.{4})/g, '$1 ').trim();
+}
+function chkBkNum() {
+  const v = $('pBkNum')?.value, h = $('pBkNum_h');
+  if (!h) return;
+  const ok = /^01[3-9]\d{8}$/.test(v);
+  h.textContent = ok ? '✅ Valid bKash number' : '❌ Format: 01XXXXXXXXX';
+  h.className = 'phHint ' + (ok ? 'ok' : 'err');
+}
+function chkNgNum() {
+  const v = $('pNgNum')?.value, h = $('pNgNum_h');
+  if (!h) return;
+  const ok = /^01[3-9]\d{8}$/.test(v);
+  h.textContent = ok ? '✅ Valid Nagad number' : '❌ Format: 01XXXXXXXXX';
+  h.className = 'phHint ' + (ok ? 'ok' : 'err');
+}
+
+// ─── MAP ─────────────────────────────────────────────
+function initMap() {
+  if (MAP_INIT) { if (MAP) MAP.invalidateSize(); return; }
+  const el = $('mapEl');
+  if (!el || typeof L === 'undefined') return;
+  const isSA = $('coCo')?.value === 'SA';
+  const lat = isSA ? 24.7136 : 23.8103;
+  const lng = isSA ? 46.6753 : 90.4125;
+  MAP = L.map('mapEl').setView([lat, lng], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { attribution: '© OpenStreetMap' }).addTo(MAP);
+  MAP_MK = L.marker([lat, lng], { draggable: true }).addTo(MAP);
+  MAP_MK.bindPopup('📍 Drag to your delivery location').openPopup();
+  MAP_MK.on('dragend', () => {
+    const pos = MAP_MK.getLatLng();
+    LOC = { lat: pos.lat, lng: pos.lng };
+    revGeo(pos.lat, pos.lng);
+  });
+  MAP.on('click', e => {
+    MAP_MK.setLatLng(e.latlng);
+    LOC = { lat: e.latlng.lat, lng: e.latlng.lng };
+    revGeo(e.latlng.lat, e.latlng.lng);
+  });
+  MAP_INIT = true;
+  LOC = { lat, lng };
+  const locEl = $('locConf');
+  if (locEl) locEl.classList.remove('hide');
+  const locTxt = $('locTxt');
+  if (locTxt) locTxt.textContent = isSA ? 'Riyadh, Saudi Arabia' : 'Dhaka, Bangladesh';
+}
+
+function revGeo(lat, lng) {
+  fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json`)
+    .then(r => r.json()).then(d => {
+      const addr = d.display_name || `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+      const locTxt = $('locTxt');
+      if (locTxt) locTxt.textContent = addr;
+      const locConf = $('locConf');
+      if (locConf) locConf.classList.remove('hide');
+      toast('📍 Location: ' + addr.split(',')[0], 'ok');
+    }).catch(() => {
+      const locTxt = $('locTxt');
+      if (locTxt) locTxt.textContent = `${lat.toFixed(4)}, ${lng.toFixed(4)}`;
+    });
+}
+
+function searchMap() {
+  const q = $('mapQ')?.value.trim();
+  if (!q) return;
+  fetch(`https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(q)}&format=json&limit=1`)
+    .then(r => r.json()).then(d => {
+      if (d.length > 0) {
+        const { lat, lon } = d[0];
+        MAP.setView([lat, lon], 14);
+        MAP_MK.setLatLng([lat, lon]);
+        LOC = { lat: parseFloat(lat), lng: parseFloat(lon) };
+        revGeo(lat, lon);
+      } else toast('Location not found', 'err');
+    }).catch(() => toast('Map search failed', 'err'));
+}
+
+function getMyLoc() {
+  if (!navigator.geolocation) { toast('Geolocation not supported', 'err'); return; }
+  navigator.geolocation.getCurrentPosition(
+    pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+      MAP.setView([lat, lng], 14);
+      MAP_MK.setLatLng([lat, lng]);
+      LOC = { lat, lng };
+      revGeo(lat, lng);
+      toast('📍 Using your current location', 'ok');
+    },
+    () => toast('Location access denied. Please allow or search manually.', 'err')
+  );
+}
+
+// ─── PLACE ORDER ────────────────────────────────────
+function placeOrder() {
+  if (!CU) { openOv('ovAuth'); return; }
+  const fn = $('coFN')?.value.trim(), ln = $('coLN')?.value.trim();
+  if (!fn || !ln) { toast('Enter your full name', 'err'); return; }
+  const em = $('coEm')?.value.trim();
+  if (!em || !em.includes('@')) { toast('Enter a valid email', 'err'); return; }
+  const co = $('coCo')?.value;
+  if (!co) { toast('Select your country', 'err'); return; }
+  const ph = $('coPh')?.value.trim();
+  const rule = PHONE_RULES[co] || PHONE_RULES['OT'];
+  if (!rule.re.test(ph)) { toast('❌ ' + rule.hint, 'err'); return; }
+  const addr = $('coAddr')?.value.trim();
+  if (!addr) { toast('Enter delivery address', 'err'); return; }
+  if (!SEL_PAY) { toast('Select a payment method', 'err'); return; }
+  if (!validatePayDetail()) return;
+  const items = ORDER_ITEMS.length > 0 ? ORDER_ITEMS : CART;
+  const total = items.reduce((s, c) => s + c.price * c.qty, 0);
+  const oid = 'ORD-' + Date.now();
+  const locText = $('locTxt')?.textContent || 'Not confirmed';
+  const order = { id: oid, items: [...items], total, date: new Date().toISOString(), status: 'Confirmed', payment: SEL_PAY, deliveryLoc: locText, country: co, phone: ph };
+  // Save order
+  const key = 'mm_ords_' + CU.id;
+  const prev = LS.get(key) || [];
+  prev.unshift(order);
+  LS.set(key, prev);
+  // Save all orders for admin
+  const allOrds = LS.get('mm_all_ords') || [];
+  allOrds.unshift({ ...order, userName: CU.name, userEmail: CU.email });
+  LS.set('mm_all_ords', allOrds);
+  // Give seller points
+  items.forEach(item => {
+    const sels = LS.get('mm_sels') || [];
+    const si = sels.findIndex(s => s.id === item.sellerId);
+    if (si >= 0) { sels[si].points += PTS_SALE; sels[si].totalSales++; }
+    LS.set('mm_sels', sels);
+  });
+  // Clear
+  if (ORDER_ITEMS.length === 0) { CART = []; LS.set('mm_cart', []); }
+  ORDER_ITEMS = [];
+  SEL_PAY = null;
+  updateCartBadge();
+  // Show confirm
+  $('ocID').textContent = 'Order ' + oid;
+  $('ocDate').textContent = new Date().toLocaleString();
+  $('ocPayInfo').innerHTML = getPayConfirmText(order.payment, total, co);
+  goPage('orderconf');
+}
+
+function validatePayDetail() {
+  const v = id => $(id)?.value?.trim();
+  if (SEL_PAY === 'bkash') {
+    if (!v('pBkNum') || !/^01[3-9]\d{8}$/.test(v('pBkNum'))) { toast('Enter valid bKash number', 'err'); return false; }
+    if (!v('pBkTxn')) { toast('Enter bKash Transaction ID', 'err'); return false; }
+    if (!v('pBkAmt')) { toast('Enter amount paid', 'err'); return false; }
+  } else if (SEL_PAY === 'nagad') {
+    if (!v('pNgNum') || !/^01[3-9]\d{8}$/.test(v('pNgNum'))) { toast('Enter valid Nagad number', 'err'); return false; }
+    if (!v('pNgTxn')) { toast('Enter Nagad Transaction ID', 'err'); return false; }
+  } else if (SEL_PAY === 'bank') {
+    if (!v('pBankRef')) { toast('Enter bank transaction reference', 'err'); return false; }
+  } else if (SEL_PAY === 'stc') {
+    if (!v('pStcNum') || !/^05\d{8}$/.test(v('pStcNum'))) { toast('Enter valid STC Pay number (05XXXXXXXX)', 'err'); return false; }
+    if (!v('pStcTxn')) { toast('Enter STC Pay Transaction ID', 'err'); return false; }
+  } else if (SEL_PAY === 'alrajhi') {
+    if (!v('pAlrRef')) { toast('Enter Al Rajhi transaction reference', 'err'); return false; }
+  } else if (SEL_PAY === 'card') {
+    const num = v('pCardNum')?.replace(/\s/g, '');
+    if (!num || num.length < 16) { toast('Enter valid card number (16 digits)', 'err'); return false; }
+    if (!v('pCardExp')) { toast('Enter card expiry', 'err'); return false; }
+    if (!v('pCardCVV')) { toast('Enter CVV', 'err'); return false; }
+    if (!v('pCardNm')) { toast('Enter cardholder name', 'err'); return false; }
+  }
+  return true;
+}
+
+function getPayConfirmText(method, total, co) {
+  const m = {
+    bkash: `<strong>💚 bKash Payment Submitted</strong><br>Transaction ID: <strong>${$('pBkTxn')?.value || '—'}</strong><br>From: ${$('pBkNum')?.value || '—'}<br>Amount: ৳${total.toLocaleString()}<br><span style="color:#FF6600">⏳ Verification within 1-2 hours</span>`,
+    nagad: `<strong>🟠 Nagad Payment Submitted</strong><br>Transaction ID: <strong>${$('pNgTxn')?.value || '—'}</strong><br>From: ${$('pNgNum')?.value || '—'}<br>Amount: ৳${total.toLocaleString()}<br><span style="color:#FF6600">⏳ Verification within 1-2 hours</span>`,
+    bank: `<strong>🏦 Bank Transfer Submitted</strong><br>Reference: <strong>${$('pBankRef')?.value || '—'}</strong><br>Amount: ৳${total.toLocaleString()}<br><span style="color:#FF6600">⏳ Bank verification 24-48 hours</span>`,
+    stc: `<strong>📲 STC Pay Submitted</strong><br>Transaction ID: <strong>${$('pStcTxn')?.value || '—'}</strong><br>From: ${$('pStcNum')?.value || '—'}<br><span style="color:#FF6600">⏳ Verification within 1-2 hours</span>`,
+    alrajhi: `<strong>🏦 Al Rajhi Transfer Submitted</strong><br>Reference: <strong>${$('pAlrRef')?.value || '—'}</strong><br><span style="color:#FF6600">⏳ Bank verification 24-48 hours</span>`,
+    card: `<strong>💳 Card Payment Processed</strong><br>Card: ****${$('pCardNum')?.value.replace(/\s/g,'').slice(-4) || '****'}<br>Amount: ৳${total.toLocaleString()}<br><span style="color:#34A853">✅ Payment confirmed instantly</span>`
+  };
+  return m[method] || 'Payment submitted';
+}
+
+// ─── AUTH ────────────────────────────────────────────
+function onAccClick() { CU ? goPage('profile') : openOv('ovAuth'); }
+function authTab(t) {
+  $('tSI').classList.toggle('on', t === 'si');
+  $('tCA').classList.toggle('on', t === 'ca');
+  $('fSI').classList.toggle('hide', t !== 'si');
+  $('fCA').classList.toggle('hide', t !== 'ca');
+}
+function doSignIn() {
+  const em = $('siEm').value.trim(), pw = $('siPw').value;
+  if (!em || !pw) { toast('Enter email and password', 'err'); return; }
+  const users = LS.get('mm_users') || [];
+  // Check admin
+  if (em === 'admin@mainman.com' && pw === 'mainman2024') {
+    CU = { id: 'admin', name: 'Mainul Islam Shuvo', email: em, country: 'BD', phone: '01700000000', role: 'admin', sellerId: null };
+    LS.set('mm_cur', CU);
+    closeOv('ovAuth'); updateHdrUser(); checkAdminNav();
+    toast('👑 Welcome, Admin!', 'ok');
+    return;
+  }
+  const u = users.find(x => x.email === em && x.password === pw);
+  if (!u) { toast('Incorrect email or password', 'err'); return; }
+  CU = { ...u }; LS.set('mm_cur', CU);
+  closeOv('ovAuth'); updateHdrUser(); checkAdminNav();
+  toast('Welcome back, ' + CU.name.split(' ')[0] + '! 👋', 'ok');
+}
+function doCreateAcc() {
+  const fn = $('caFN').value.trim(), ln = $('caLN').value.trim(),
+    em = $('caEm').value.trim(), ph = $('caPh')?.value.trim() || '',
+    co = $('caC0').value, pw = $('caPw').value, pw2 = $('caPw2').value;
+  if (!fn || !em || !co || !pw) { toast('Fill all required fields', 'err'); return; }
+  if (pw.length < 6) { toast('Password min 6 characters', 'err'); return; }
+  if (pw !== pw2) { toast('Passwords do not match', 'err'); return; }
+  if (ph) {
+    const rule = PHONE_RULES[co] || PHONE_RULES['OT'];
+    if (!rule.re.test(ph)) { toast('❌ ' + rule.hint, 'err'); return; }
+  }
+  const users = LS.get('mm_users') || [];
+  if (users.find(u => u.email === em)) { toast('Email already registered', 'err'); return; }
+  const nu = { id: 'u_' + Date.now(), name: fn + ' ' + ln, email: em, phone: ph, country: co, password: pw, role: 'customer', sellerId: null, createdAt: new Date().toISOString() };
+  users.push(nu); LS.set('mm_users', users);
+  CU = { ...nu }; LS.set('mm_cur', CU);
+  closeOv('ovAuth'); updateHdrUser(); checkAdminNav();
+  toast('🎉 Welcome, ' + fn + '!', 'ok');
+}
+function doSignOut() {
+  CU = null; CART = []; WISH = [];
+  LS.set('mm_cart', []); LS.set('mm_wish', []);
+  localStorage.removeItem('mm_cur');
+  updateHdrUser(); updateCartBadge(); checkAdminNav();
+  goPage('home'); toast('Signed out', 'inf');
+}
+function updateHdrUser() {
+  if (CU) {
+    $('hdHello').textContent = 'Hello, ' + CU.name.split(' ')[0];
+    $('hdAccLbl').textContent = 'Account & Lists ▾';
+    $('hdLoc').textContent = CU.country === 'SA' ? 'Saudi Arabia' : CU.country === 'AE' ? 'UAE' : 'Bangladesh';
+  } else {
+    $('hdHello').textContent = 'Hello, sign in';
+    $('hdAccLbl').textContent = 'Account & Lists ▾';
+  }
+}
+
+// ─── PHONE CHECK ────────────────────────────────────
+function chkPhone(inId, hintId, coId) {
+  const val = $(inId)?.value?.trim();
+  const co = $(coId)?.value || 'OT';
+  const h = $(hintId);
+  if (!h) return;
+  const rule = PHONE_RULES[co] || PHONE_RULES['OT'];
+  if (!val) { h.textContent = rule.hint; h.className = 'phHint info'; return; }
+  if (rule.re.test(val)) { h.textContent = '✅ Valid number'; h.className = 'phHint ok'; }
+  else { h.textContent = '❌ ' + rule.hint; h.className = 'phHint err'; }
+}
+
+// ─── SELLER ID ───────────────────────────────────────
+function openSID() {
+  if (!CU) { openOv('ovAuth'); toast('Please sign in first', 'inf'); return; }
+  const sels = LS.get('mm_sels') || [];
+  if (CU.sellerId && sels.find(s => s.id === CU.sellerId)) {
+    goPage('profile'); setTimeout(() => setPTab('seller'), 200);
+    toast('You already have a Seller ID', 'inf'); return;
+  }
+  openOv('ovSID');
+}
+function sidCountry() {
+  document.querySelectorAll('.cfSec').forEach(e => e.classList.remove('show'));
+  const v = $('sCo').value;
+  if (v) { const el = $('cf' + v); if (el) el.classList.add('show'); }
+}
+function doRegSeller() {
+  if (!CU) return;
+  const shop = $('sShop').value.trim(), cat = $('sCat').value, co = $('sCo').value;
+  if (!shop || !cat || !co) { toast('Fill all required fields', 'err'); return; }
+  const sid = 'sid_' + Date.now();
+  const sd = { id: sid, userId: CU.id, shopName: shop, category: cat, country: co, points: 0, totalSales: 0, createdAt: new Date().toISOString() };
+  const sels = LS.get('mm_sels') || [];
+  sels.push(sd); LS.set('mm_sels', sels);
+  CU.sellerId = sid;
+  const users = LS.get('mm_users') || [];
+  const ui = users.findIndex(u => u.id === CU.id);
+  if (ui >= 0) { users[ui].sellerId = sid; LS.set('mm_users', users); }
+  LS.set('mm_cur', CU);
+  closeOv('ovSID');
+  toast('🎉 Seller ID registered! Welcome to THE MAINMAN!', 'ok');
+  goPage('profile'); setTimeout(() => setPTab('seller'), 300);
+}
+
+// ─── PROFILE ────────────────────────────────────────
+function renderProfile() {
+  if (!CU) { goPage('home'); openOv('ovAuth'); return; }
+  const init = CU.name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2);
+  $('profAva').textContent = init;
+  $('profName').textContent = CU.name;
+  $('profEmail').textContent = CU.email;
+  const bd = $('profBdgs');
+  const sels = LS.get('mm_sels') || [];
+  const s = sels.find(x => x.id === CU.sellerId);
+  let bh = '';
+  if (CU.role === 'admin') bh += '<span class="pbdg pbAdmin">⚙️ ADMIN</span>';
+  if (s) { const rk = getRank(s.points); bh += `<span class="pbdg pbOrange">${rk.i} ${rk.n} Seller</span>`; }
+  bd.innerHTML = bh;
+  const sn = $('stNm'); if (sn) sn.value = CU.name;
+  const se = $('stEm'); if (se) se.value = CU.email;
+  const sp = $('stPh'); if (sp) sp.value = CU.phone || '';
+  renderOrdersList(); renderProfWish(); renderSellerDash();
+}
+
+function setPTab(tab) {
+  document.querySelectorAll('.pTab').forEach((t, i) => {
+    const tabs = ['orders', 'wishlist', 'seller', 'settings'];
+    t.classList.toggle('on', tabs[i] === tab);
+  });
+  document.querySelectorAll('.pPanel').forEach(p => p.classList.remove('on'));
+  const pp = $('pp_' + tab); if (pp) pp.classList.add('on');
+  if (tab === 'seller') renderSellerDash();
+  if (tab === 'wishlist') renderProfWish();
+}
+
+function renderOrdersList() {
+  const c = $('ordersList'); if (!c || !CU) return;
+  const ords = LS.get('mm_ords_' + CU.id) || [];
+  c.innerHTML = ords.length === 0
+    ? `<div style="text-align:center;padding:45px;color:#565959"><div style="font-size:48px;margin-bottom:10px">📦</div><div style="font-size:16px;font-weight:600">No orders yet</div><button class="aBtn" style="width:auto;padding:8px 20px;margin-top:12px" onclick="goPage('shop')">Start Shopping →</button></div>`
+    : ords.map(o => `<div style="border:1px solid #e8e8e8;border-radius:4px;padding:12px;margin-bottom:9px">
+      <div style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:5px;margin-bottom:8px">
+        <div><div style="font-size:11px;color:#565959">ORDER ${new Date(o.date).toLocaleDateString()}</div><div style="font-weight:700;font-size:13px">${o.id}</div></div>
+        <span class="statusBdg st-confirmed">${o.status}</span>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:7px">${o.items.map(i => `<span style="font-size:24px" title="${i.name}">${i.emoji}</span>`).join('')}</div>
+      <div style="display:flex;justify-content:space-between;font-size:13px;border-top:1px solid #e8e8e8;padding-top:7px">
+        <span style="color:#565959">${o.items.reduce((s,i) => s+i.qty, 0)} item(s) | 📍 ${(o.deliveryLoc||'').substring(0,30)}${(o.deliveryLoc||'').length>30?'...':''}</span>
+        <strong>৳${o.total.toLocaleString()}</strong>
+      </div>
+    </div>`).join('');
+}
+
+function renderProfWish() {
+  const c = $('profWish'); if (!c) return;
+  const items = PRODS.filter(p => WISH.includes(p.id));
+  c.innerHTML = items.length === 0
+    ? '<div style="grid-column:1/-1;text-align:center;padding:45px;color:#565959"><div style="font-size:48px;margin-bottom:10px">❤️</div><div style="font-size:16px;font-weight:600">No saved items</div></div>'
+    : items.map(p => pCard(p)).join('');
+}
+
+function renderSellerDash() {
+  const c = $('sellerDash'); if (!c || !CU) return;
+  if (!CU.sellerId) {
+    c.innerHTML = `<div style="text-align:center;padding:45px"><div style="font-size:48px;margin-bottom:12px">🛍️</div><div style="font-size:19px;font-weight:700;margin-bottom:7px">Start Selling</div><div style="color:#565959;max-width:360px;margin:0 auto 16px;font-size:13px">Register Seller ID to list products & earn 5 pts (৳29/pt) per sale.</div><button class="aBtn" style="width:auto;padding:9px 22px" onclick="openSID()">Register Seller ID →</button></div>`;
+    return;
+  }
+  const sels = LS.get('mm_sels') || [];
+  const s = sels.find(x => x.id === CU.sellerId) || { points: 0, totalSales: 0, shopName: 'My Shop', country: 'BD' };
+  const rk = getRank(s.points), nrk = RANKS[RANKS.indexOf(rk) + 1];
+  const pct = nrk ? Math.min(100, (s.points - rk.min) / (nrk.min - rk.min) * 100) : 100;
+  const eBDT = s.points * PT_BDT;
+  const eSAR = (eBDT * PT_SAR).toFixed(2);
+  const myP = PRODS.filter(p => p.sellerId === CU.sellerId);
+  c.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:12px">
+      <div><div style="font-size:18px;font-weight:700">${s.shopName}</div><div style="font-size:13px;color:#565959">${s.category||''} • ${s.country==='SA'?'🇸🇦 Saudi Arabia':'🇧🇩 Bangladesh'}</div></div>
+      <div style="background:${rk.c}18;color:${rk.c};border:2px solid ${rk.c};border-radius:20px;padding:4px 13px;font-size:12px;font-weight:800">${rk.i} ${rk.n} Seller</div>
+    </div>
+    <div class="sStats">
+      <div class="sStat"><div class="sv">${s.totalSales}</div><div class="sl">Total Sales</div></div>
+      <div class="sStat"><div class="sv">${s.points}</div><div class="sl">Points</div></div>
+      <div class="sStat"><div class="sv">৳${eBDT.toLocaleString()}</div><div class="sl">BDT Earnings</div></div>
+      <div class="sStat"><div class="sv">SAR ${eSAR}</div><div class="sl">SAR Earnings</div></div>
+    </div>
+    <div class="progBox">
+      <div class="progLbs"><span>${rk.i} ${rk.n}</span><span>${nrk ? nrk.i+' '+nrk.n+' ('+nrk.min+' pts)' : '👑 Max Rank!'}</span></div>
+      <div class="progTr"><div class="progFl" style="width:${pct}%"></div></div>
+      <div style="font-size:11px;color:#565959;margin-top:4px">${s.points} / ${nrk ? nrk.min : s.points} pts</div>
+    </div>
+    <div class="earnBox">
+      <div style="font-size:12px;font-weight:700;color:#1E8449;margin-bottom:5px">💰 Earnings</div>
+      <div class="earnVal">৳${eBDT.toLocaleString()}</div>
+      <div class="earnSAR">= SAR ${eSAR}</div>
+      <div class="earnNote">5 pts per sale • 1 pt = ৳29 • Min withdrawal ৳${MIN_W}</div>
+      ${eBDT >= MIN_W
+        ? `<button class="wBtn" onclick="showWithdraw()">Withdraw ৳${eBDT.toLocaleString()} →</button>`
+        : `<div style="font-size:12px;color:#CC0C39;margin-top:6px">⚠️ Need ৳${(MIN_W-eBDT).toFixed(0)} more</div>`}
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+      <div style="font-size:15px;font-weight:700">My Products (${myP.length})</div>
+      <button class="aBtn" style="width:auto;padding:6px 13px;margin-bottom:0" onclick="openAddProd()">+ Add Product</button>
+    </div>
+    ${myP.length === 0
+      ? '<div style="text-align:center;padding:22px;background:#f8f8f8;border-radius:4px;color:#565959"><div style="font-size:30px;margin-bottom:6px">📦</div><div>Add your first product!</div></div>'
+      : `<div class="miniProds">${myP.map(p => `<div class="miniP"><div class="miniP-e">${p.emoji}</div><div class="miniP-n">${p.name}</div><div class="miniP-p">৳${p.price.toLocaleString()}</div><div class="miniP-s">${p.sold} sold</div><div class="miniP-acts"><button onclick="openEditProd('${p.id}')">Edit</button><button onclick="delProd('${p.id}')" style="color:#CC0C39">Delete</button></div></div>`).join('')}</div>`}
+  `;
+}
+
+function showWithdraw() {
+  const sels = LS.get('mm_sels') || [];
+  const s = sels.find(x => x.id === CU.sellerId); if (!s) return;
+  const eBDT = s.points * PT_BDT;
+  const methods = s.country === 'SA'
+    ? [{id:'stc',i:'📲',n:'STC Pay',d:'Instant'},{id:'alrajhi',i:'🏦',n:'Al Rajhi',d:'1-2 days'}]
+    : [{id:'bkash',i:'💚',n:'bKash',d:'Instant'},{id:'nagad',i:'🟠',n:'Nagad',d:'Instant'},{id:'bank',i:'🏦',n:'Bank Transfer',d:'1-3 days'}];
+  $('wdBody').innerHTML = `
+    <div style="text-align:center;margin-bottom:16px">
+      <div style="font-size:24px;font-weight:700;color:#1E8449">৳${eBDT.toLocaleString()}</div>
+      <div style="font-size:13px;color:#565959">= SAR ${(eBDT*PT_SAR).toFixed(2)}</div>
+    </div>
+    <div style="font-size:13px;font-weight:700;margin-bottom:9px">Select Withdrawal Method:</div>
+    ${methods.map(m => `<div class="pmOpt" onclick="confirmWithdraw('${m.id}',${eBDT},this)">
+      <div class="pmIco">${m.i}</div>
+      <div><div class="pmNm">${m.n}</div><div class="pmDesc">${m.d}</div></div>
+    </div>`).join('')}`;
+  openOv('ovWD');
+}
+
+function confirmWithdraw(method, amt, el) {
+  const sels = LS.get('mm_sels') || [];
+  const i = sels.findIndex(x => x.id === CU.sellerId); if (i < 0) return;
+  sels[i].points = 0; LS.set('mm_sels', sels);
+  closeOv('ovWD');
+  toast(`✅ Withdrawal of ৳${amt.toLocaleString()} via ${method} submitted! 1-3 days.`, 'ok');
+  renderSellerDash();
+}
+
+function saveSettings() {
+  if (!CU) return;
+  CU.name = $('stNm').value; CU.email = $('stEm').value; CU.phone = $('stPh').value;
+  const users = LS.get('mm_users') || [];
+  const i = users.findIndex(u => u.id === CU.id);
+  if (i >= 0) { users[i] = { ...users[i], ...CU }; LS.set('mm_users', users); }
+  LS.set('mm_cur', CU);
+  updateHdrUser(); renderProfile(); toast('Settings saved!', 'ok');
+}
+
+// ─── PRODUCT ADD/EDIT ────────────────────────────────
+function openAddProd() {
+  if (!CU) { openOv('ovAuth'); return; }
+  $('apTitle').textContent = '➕ Add New Product';
+  $('apEditId').value = '';
+  $('apSubmitBtn').textContent = 'List Product →';
+  ['apName','apPrice','apOldP','apStock','apEmoji','apDesc'].forEach(id => { const el = $(id); if(el) el.value = ''; });
+  $('apBadge').value = '';
+  openOv('ovAP');
+}
+
+function openEditProd(id) {
+  const p = PRODS.find(x => x.id === id);
+  if (!p) return;
+  $('apTitle').textContent = '✏️ Edit Product';
+  $('apEditId').value = id;
+  $('apSubmitBtn').textContent = 'Save Changes →';
+  $('apName').value = p.name;
+  $('apCat').value = p.cat;
+  $('apPrice').value = p.price;
+  $('apOldP').value = p.oldPrice || '';
+  $('apStock').value = p.stock;
+  $('apEmoji').value = p.emoji;
+  $('apDesc').value = p.desc;
+  $('apBadge').value = p.badge || '';
+  openOv('ovAP');
+}
+
+function doAddOrEditProd() {
+  if (!CU) return;
+  const n = $('apName').value.trim(), cat = $('apCat').value, p = parseFloat($('apPrice').value),
+    op = parseFloat($('apOldP').value) || 0, st = parseInt($('apStock').value) || 0,
+    e = $('apEmoji').value.trim() || '📦', d = $('apDesc').value.trim(), b = $('apBadge').value;
+  if (!n || !p || !st || !d) { toast('Fill all required fields', 'err'); return; }
+  const editId = $('apEditId').value;
+  const sels = LS.get('mm_sels') || [];
+  const selObj = sels.find(x => x.id === CU.sellerId);
+  if (editId) {
+    const idx = PRODS.findIndex(x => x.id === editId);
+    if (idx >= 0) {
+      PRODS[idx] = { ...PRODS[idx], name: n, cat, price: p, oldPrice: op, emoji: e, desc: d, badge: b, stock: st };
+      LS.set('mm_prods', PRODS);
+      toast(`✅ "${n}" updated!`, 'ok');
+    }
+  } else {
+    const np = { id: 'p_' + Date.now(), name: n, cat, price: p, oldPrice: op, emoji: e, desc: d, badge: b, seller: selObj ? selObj.shopName : CU.name, sellerId: CU.sellerId || 'sid_off', rating: 5.0, reviews: 0, stock: st, sold: 0, createdAt: new Date().toISOString() };
+    PRODS.unshift(np);
+    LS.set('mm_prods', PRODS);
+    if (selObj) { selObj.points += PTS_SALE; selObj.totalSales++; LS.set('mm_sels', sels); }
+    toast(`✅ "${n}" listed on THE MAINMAN!`, 'ok');
+  }
+  closeOv('ovAP');
+  renderSellerDash(); renderHome();
+  if ($('page_admin').classList.contains('show')) renderAdmin();
+  ['apName','apPrice','apOldP','apStock','apEmoji','apDesc'].forEach(id => { const el=$(id); if(el) el.value=''; });
+}
+
+function delProd(id) {
+  const p = PRODS.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Delete "${p.name}"? This cannot be undone.`)) return;
+  PRODS = PRODS.filter(x => x.id !== id);
+  LS.set('mm_prods', PRODS);
+  toast('Product deleted', 'inf');
+  renderSellerDash(); renderHome();
+  if ($('page_admin').classList.contains('show')) renderAdmin();
+}
+
+// ─── ADMIN PANEL ────────────────────────────────────
+function renderAdmin() {
+  if (!CU || CU.role !== 'admin') { goPage('home'); toast('Admin access only', 'err'); return; }
+  const users = LS.get('mm_users') || [];
+  const sels = LS.get('mm_sels') || [];
+  const allOrds = LS.get('mm_all_ords') || [];
+  // Stats
+  const st = $('adminStats');
+  if (st) st.innerHTML = [
+    { v: PRODS.length, l: 'Total Products' },
+    { v: users.length, l: 'Registered Users' },
+    { v: sels.length, l: 'Active Sellers' },
+    { v: allOrds.length, l: 'Total Orders' },
+    { v: '৳' + allOrds.reduce((s, o) => s + o.total, 0).toLocaleString(), l: 'Total Revenue' }
+  ].map(x => `<div class="aStat"><div class="av">${x.v}</div><div class="al">${x.l}</div></div>`).join('');
+  renderAdminProds(); renderAdminOrds(allOrds); renderAdminUsers(users); renderAdminSels(sels);
+  const pc = $('adminProdCount'); if (pc) pc.textContent = PRODS.length;
+  const oc = $('adminOrdCount'); if (oc) oc.textContent = allOrds.length;
+  const uc = $('adminUserCount'); if (uc) uc.textContent = users.length;
+  const sc = $('adminSelCount'); if (sc) sc.textContent = sels.length;
+}
+
+function setAdminTab(tab) {
+  document.querySelectorAll('.adminTab').forEach((t, i) => {
+    const tabs = ['products','orders','users','sellers','github'];
+    t.classList.toggle('on', tabs[i] === tab);
+  });
+  document.querySelectorAll('.adminPanel').forEach(p => p.classList.remove('on'));
+  const ap = $('ap_' + tab); if (ap) ap.classList.add('on');
+}
+
+function renderAdminProds() {
+  const tbl = $('adminProdTable'); if (!tbl) return;
+  const srch = ($('adminSrch')?.value || '').toLowerCase();
+  const cat = $('adminCatFil')?.value || '';
+  let f = PRODS.filter(p => (!srch || p.name.toLowerCase().includes(srch)) && (!cat || p.cat === cat));
+  const pc = $('adminProdCount'); if (pc) pc.textContent = f.length;
+  tbl.innerHTML = `<thead><tr><th>Product</th><th>Category</th><th>Price</th><th>Stock</th><th>Sold</th><th>Seller</th><th>Actions</th></tr></thead>
+    <tbody>${f.map(p => `<tr>
+      <td><span style="font-size:18px">${p.emoji}</span> ${p.name}${p.badge?` <span style="background:#CC0C39;color:#fff;font-size:10px;padding:2px 5px;border-radius:2px">${p.badge}</span>`:''}</td>
+      <td>${p.cat}</td>
+      <td>৳${p.price.toLocaleString()}${p.oldPrice>0?`<br><span style="color:#CC0C39;font-size:11px">was ৳${p.oldPrice.toLocaleString()}</span>`:''}</td>
+      <td>${p.stock}</td><td>${p.sold}</td><td>${p.seller}</td>
+      <td><div class="tblActions"><button class="editBtn" onclick="openEditProd('${p.id}')">✏️ Edit</button><button class="delBtn" onclick="delProd('${p.id}')">🗑️ Del</button></div></td>
+    </tr>`).join('')}</tbody>`;
+}
+
+function renderAdminOrds(ords) {
+  const tbl = $('adminOrdTable'); if (!tbl) return;
+  tbl.innerHTML = `<thead><tr><th>Order ID</th><th>Customer</th><th>Items</th><th>Total</th><th>Payment</th><th>Status</th><th>Date</th></tr></thead>
+    <tbody>${(ords||[]).map(o => `<tr>
+      <td style="font-family:monospace;font-size:12px">${o.id}</td>
+      <td>${o.userName||'—'}<br><span style="color:#565959;font-size:11px">${o.userEmail||''}</span></td>
+      <td>${(o.items||[]).map(i=>`<span title="${i.name}">${i.emoji}</span>`).join('')}</td>
+      <td><strong>৳${o.total?.toLocaleString()}</strong></td>
+      <td><span style="text-transform:uppercase;font-size:11px">${o.payment||'—'}</span></td>
+      <td><span class="statusBdg st-confirmed">${o.status}</span></td>
+      <td style="font-size:12px;color:#565959">${new Date(o.date).toLocaleDateString()}</td>
+    </tr>`).join('')}</tbody>`;
+}
+
+function renderAdminUsers(users) {
+  const tbl = $('adminUserTable'); if (!tbl) return;
+  tbl.innerHTML = `<thead><tr><th>Name</th><th>Email</th><th>Country</th><th>Phone</th><th>Seller ID</th><th>Joined</th></tr></thead>
+    <tbody>${(users||[]).map(u => `<tr>
+      <td>${u.name}</td><td>${u.email}</td>
+      <td>${u.country==='BD'?'🇧🇩 BD':u.country==='SA'?'🇸🇦 SA':u.country==='AE'?'🇦🇪 AE':'🌍'}</td>
+      <td>${u.phone||'—'}</td>
+      <td>${u.sellerId?`<span style="color:#1E8449;font-size:12px">✅ ${u.sellerId.slice(-6)}</span>`:'<span style="color:#aaa">None</span>'}</td>
+      <td style="font-size:12px;color:#565959">${new Date(u.createdAt).toLocaleDateString()}</td>
+    </tr>`).join('')}</tbody>`;
+}
+
+function renderAdminSels(sels) {
+  const tbl = $('adminSelTable'); if (!tbl) return;
+  tbl.innerHTML = `<thead><tr><th>Shop</th><th>Category</th><th>Country</th><th>Points</th><th>Sales</th><th>Rank</th></tr></thead>
+    <tbody>${(sels||[]).map(s => {
+      const rk = getRank(s.points);
+      return `<tr>
+        <td><strong>${s.shopName}</strong></td>
+        <td>${s.category}</td>
+        <td>${s.country==='BD'?'🇧🇩 BD':s.country==='SA'?'🇸🇦 SA':s.country==='AE'?'🇦🇪 AE':'🌍'}</td>
+        <td>${s.points}</td><td>${s.totalSales}</td>
+        <td><span style="color:${rk.c};font-weight:700">${rk.i} ${rk.n}</span></td>
+      </tr>`;
+    }).join('')}</tbody>`;
+}
+
+// ─── GITHUB INTEGRATION ────────────────────────────
+function exportProdsJSON() {
+  const json = JSON.stringify(PRODS, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'mainman_products.json';
+  a.click(); URL.revokeObjectURL(url);
+  toast('✅ Products exported as mainman_products.json', 'ok');
+}
+
+function importProdsJSON(e) {
+  const file = e.target.files[0]; if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (!Array.isArray(data)) { toast('Invalid JSON: must be an array', 'err'); return; }
+      PRODS = data; LS.set('mm_prods', PRODS);
+      toast(`✅ ${data.length} products imported successfully!`, 'ok');
+      renderHome(); renderAdmin();
+    } catch (err) { toast('Invalid JSON file', 'err'); }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+}
+
+function fetchGhProds() {
+  const url = $('ghURL')?.value.trim();
+  if (!url) { toast('Enter a GitHub raw JSON URL', 'err'); return; }
+  toast('Fetching from GitHub...', 'inf');
+  fetch(url)
+    .then(r => r.json())
+    .then(data => {
+      if (!Array.isArray(data)) { toast('Invalid JSON: must be an array', 'err'); return; }
+      PRODS = data; LS.set('mm_prods', PRODS);
+      toast(`✅ ${data.length} products loaded from GitHub!`, 'ok');
+      renderHome(); renderAdmin();
+    }).catch(() => toast('Failed to fetch. Check URL or CORS settings.', 'err'));
+}
+
+// ─── MISC ────────────────────────────────────────────
+function cycleLoc() {
+  const locs = [['BD','Bangladesh 🇧🇩'],['SA','Saudi Arabia 🇸🇦'],['AE','UAE 🇦🇪']];
+  const cur = $('hdLoc').textContent;
+  const ni = (locs.findIndex(l => cur.includes(l[1].split(' ')[0])) + 1) % locs.length;
+  $('hdLoc').textContent = locs[ni][1].split(' ')[0];
+  $('promoLoc').innerHTML = `Delivering to ${locs[ni][1]} — <strong>Update location</strong>`;
+  toast('Location: ' + locs[ni][1], 'inf');
+}
+
+// ─── OVERLAY ────────────────────────────────────────
+function openOv(id) { const el = $(id); if(el) el.classList.add('show'); }
+function closeOv(id) { const el = $(id); if(el) el.classList.remove('show'); }
+document.querySelectorAll('.ov').forEach(o => {
+  o.addEventListener('click', e => { if (e.target === o) o.classList.remove('show'); });
+});
+
+// ─── TOAST ──────────────────────────────────────────
+function toast(msg, type) {
+  const wrap = $('toastWrap'); if (!wrap) return;
+  const el = document.createElement('div');
+  el.className = 'tst ' + (type || 'inf');
+  const icons = { ok: '✅', err: '❌', inf: 'ℹ️' };
+  el.innerHTML = `<span>${icons[type]||'ℹ️'}</span><span>${msg}</span>`;
+  wrap.appendChild(el);
+  setTimeout(() => el.remove(), 4500);
+}
+
+// ─── START ───────────────────────────────────────────
+window.addEventListener('load', init);
+</script>
+</body>
+</html>
